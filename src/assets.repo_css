@@ -1,0 +1,16 @@
+/* includes/bootstrap.min.css */
+
+/* includes/bootstrap-treeview.min.css */
+@@@file:src/includes/bootstrap-treeview.min.css@@@
+
+/* includes/datatables.min.css */
+@@@file:src/includes/datatables.min.css@@@
+
+/* includes/fontello-embedded.css */
+@@@file:src/includes/fontello-embedded.css@@@
+
+/* includes/animation.css */
+@@@file:src/includes/animation.css@@@
+
+/* style.css */
+@@@file:src/style.css@@@

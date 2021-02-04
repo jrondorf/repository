@@ -1,0 +1,40 @@
+/* includes/jquery.min.js */
+
+/* includes/jquery-ui.min.js */
+@@@file:src/includes/jquery-ui.min.js@@@
+
+/* includes/popper.min.js */
+
+/* includes/bootstrap.min.js */
+
+/* includes/bootstrap-notify.min.js */
+@@@file:src/includes/bootstrap-notify.min.js@@@
+
+/* includes/bootstrap-treeview.min.js */
+@@@file:src/includes/bootstrap-treeview.min.js@@@
+
+/* includes/datatables.min.js */
+@@@file:src/includes/datatables.min.js@@@
+
+/* includes/lodash.min.js */
+@@@file:src/includes/lodash.min.js@@@
+
+/* includes/classnames.js */
+@@@file:src/includes/classnames.js@@@
+
+/* includes/BootstrapMenu.min.js */
+@@@file:src/includes/BootstrapMenu.min.js@@@
+
+/* includes/mustache.min.js */
+@@@file:src/includes/mustache.min.js@@@
+
+/* includes/ace.js */
+@@@file:src/includes/ace.js@@@
+
+/* includes/ace */
+@@@acedir:src/includes/ace@@@
+
+/* includes/ifm.js */
+@@@file:src/ifm.js@@@
+
+var ifm = new IFM(); ifm.init("ifm");
