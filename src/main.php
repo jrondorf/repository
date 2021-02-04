@@ -58,7 +58,11 @@ class IFM {
 		"disable_mime_detection" => 0,
 		"showrefresh" => 1,
 		"forceproxy" => 0,
-		"confirmoverwrite" => 1
+		"confirmoverwrite" => 1,
+
+		"scale_image" => false,
+		"image_width" => 0,
+		"image_height" => 0
 	);
 
 	private $config = array();
@@ -109,6 +113,9 @@ class IFM {
 		$this->config['showrefresh'] =  getenv('IFM_GUI_REFRESH') !== false ? intval( getenv('IFM_GUI_REFRESH') ) : $this->config['showrefresh'] ;
 		$this->config['forceproxy'] =  getenv('IFM_GUI_FORCEPROXY') !== false ? intval( getenv('IFM_GUI_FORCEPROXY') ) : $this->config['forceproxy'] ;
 		$this->config['confirmoverwrite'] =  getenv('IFM_GUI_CONFIRMOVERWRITE') !== false ? intval( getenv('IFM_GUI_CONFIRMOVERWRITE') ) : $this->config['confirmoverwrite'] ;
+		$this->config['scale_image'] =  getenv('IFM_SCALE_IMAGE') !== false ? intval( getenv('IFM_SCALE_IMAGE') ) : $this->config['scale_image'] ;
+		$this->config['image_width'] =  getenv('IFM_IMAGE_WIDTH') !== false ? intval( getenv('IFM_IMAGE_WIDTH') ) : $this->config['image_width'] ;
+		$this->config['image_height'] =  getenv('IFM_IMAGE_HEIGHT') !== false ? intval( getenv('IFM_IMAGE_HEIGHT') ) : $this->config['image_height'] ;
 
 		// optional settings
 		if( getenv('IFM_SESSION_LIFETIME') !== false )
@@ -300,11 +307,14 @@ IFM_ASSETS
 		if ( $this->checkAuth() ) {
 			// go to our root_dir
 			if( ! is_dir( realpath( $this->config['root_dir'] ) ) || ! is_readable( realpath( $this->config['root_dir'] ) ) )
-				die( "Cannot access root_dir.");
+				mkdir( $this->config['root_dir'] );
+			if( ! is_dir( realpath( $this->config['root_dir'] ) ) || ! is_readable( realpath( $this->config['root_dir'] ) ) )
+				die( "Cannot access root_dir " . $this->config['root_dir'] . ". Create this subfolder manually.");
 			else
 				chdir( realpath( $this->config['root_dir'] ) );
 			$this->mode = $mode;
 			if( isset( $_REQUEST['api'] ) || $mode == "api" ) {
+				ob_end_clean();
 				$this->handleRequest();
 			} elseif( $mode == "standalone" ) {
 				$this->getApplication();
@@ -312,6 +322,114 @@ IFM_ASSETS
 				$this->getInlineApplication();
 			}
 		}
+	}
+
+	private static function sanitizeString($value) {
+		$value = trim($value);
+		$value = strtolower($value);
+		$value = preg_replace('/\s+/', '-', $value);
+		$value = preg_replace('/[^a-z0-9_\-]+/', '', $value);
+		return $value;
+	}
+
+	private static function isMemberOfGroup($required_groups) {
+		$required_groups = array_map(self::sanitizeString, explode(',', $required_groups));
+		if (!empty($required_groups[0]) && empty(array_intersect($required_groups, $_SESSION['login_groups']))) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	private static function normalizeDirectory($dir) {
+		$dir = trim($dir);
+		if ($dir !== '') {
+			if ($dir == '/') {
+				$dir = '';
+			} else {
+				if (substr($dir, 0, 1) !== '/') {
+					$dir =  '/' . $dir;
+				}
+				if (substr($dir, -1, 1) == '/') {
+					$dir =  substr($dir, 0, -1);
+				}
+			}
+		}
+		return $dir;
+	}
+
+	public static function init($auth, $username, $password_hash, $subdomain, $directory, $subdirectoryUser, $adminGroup, $timezone, $dateLocale, $language, $scale_image, $image_width, $image_height) {
+		$subdomain = self::normalizeDirectory($subdomain);
+		$directory = self::normalizeDirectory($directory);
+
+		if ($auth == 1) {
+			$auth_source = 'inline;' . trim($username) . ':' . trim($password_hash);
+		} else {
+			$auth_source = '';
+			if ($subdirectoryUser == 1) {
+				if (!empty($_SESSION)) {
+					if (array_key_exists('login', $_SESSION) && $_SESSION['login'] == true) {
+						if (!isMemberOfGroup($adminGroup)) {
+							$directory = $directory . normalizeDirectory($_SESSION['login_username']);
+						}
+					}
+				}
+			}
+		}
+
+		$defaultconfig = array(
+			// general config
+			"auth" => $auth,
+			"auth_source" => $auth_source,
+			"root_dir" => $_SERVER['DOCUMENT_ROOT'] . $subdomain . $directory,
+			"root_public_url" => 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $directory,
+			"tmp_dir" => "",
+			"timezone" => $timezone,
+			"forbiddenChars" => array(),
+			"dateLocale" => $dateLocale,
+			"language" => $language,
+			"selfoverwrite" => 0,
+
+			// api controls
+			"ajaxrequest" => 0,
+			"chmod" => 1,
+			"copymove" => 1,
+			"createdir" => 1,
+			"createfile" => 1,
+			"edit" => 1,
+			"delete" => 1,
+			"download" => 1,
+			"extract" => 1,
+			"upload" => 1,
+			"remoteupload" => 1,
+			"rename" => 1,
+			"zipnload" => 1,
+			"createarchive" => 1,
+			"search" => 1,
+			"pagination" => 1,
+
+			// gui controls
+			"showlastmodified" => 1,
+			"showfilesize" => 1,
+			"showowner" => 0,
+			"showgroup" => 0,
+			"showpermissions" => 0,
+			"showhtdocs" => 0,
+			"showhiddenfiles" => 0,
+			"showpath" => 0,
+			"contextmenu" => 1,
+			"disable_mime_detection" => 0,
+			"showrefresh" => 1,
+			"forceproxy" => 0,
+			"confirmoverwrite" => 1,
+
+			"scale_image" => $scale_image && extension_loaded('gd'),
+			"image_width" => $image_width,
+			"image_height" => $image_height
+		);
+
+		$ifm = new IFM($defaultconfig);
+		$ifm->run('inline');
 	}
 
 	/*
@@ -350,9 +468,9 @@ IFM_ASSETS
 		if( is_dir( $name ) ) {
 			$item["type"] = "dir";
 			if( $name == ".." )
-				$item["icon"] = "icon icon-up-open";
+				$item["icon"] = "ifm-icon ifm-icon-up-open";
 			else 
-				$item["icon"] = "icon icon-folder-empty";
+				$item["icon"] = "ifm-icon ifm-icon-folder-empty";
 		} else {
 			$item["type"] = "file";
 			if( in_array( substr( $name, -7 ), array( ".tar.gz", ".tar.xz" ) ) )
@@ -754,8 +872,10 @@ IFM_ASSETS
 			else {
 				if( $_FILES['file']['tmp_name'] ) {
 					if( is_writable( getcwd( ) ) ) {
-						if( move_uploaded_file( $_FILES['file']['tmp_name'], $newfilename ) )
+						if( move_uploaded_file( $_FILES['file']['tmp_name'], $newfilename ) ) {
+							$this->scaleImage($newfilename, $this->config['scale_image'], $this->config['image_width'], $this->config['image_height']);
 							$this->jsonResponse( array( "status" => "OK", "message" => $this->l['file_upload_success'], "cd" => $d['dir'] ) );
+						}
 						else
 							$this->jsonResponse( array( "status" => "ERROR", "message" => $this->l['file_upload_error'] ) );
 					}
@@ -933,6 +1053,46 @@ IFM_ASSETS
 	/*
 	   help functions
 	 */
+
+	private function scaleImage($file, $scale_image, $image_width, $image_height) {
+		if ($scale_image) {
+			$image_info = getimagesize($file);
+			if ($image_info[0] > $image_width || $image_info[1] > $image_height) {
+				$image = false;
+				$ratio_width = $image_width / $image_info[0];
+				$ratio_height = $image_height / $image_info[1];
+				$ratio = min($ratio_width, $ratio_height);
+				$new_width = (int) $image_info[0] * $ratio;
+				switch ($image_info[2]) {
+                // IMAGETYPE_JPEG / IMG_JPG
+					case 2:
+						if (imagetypes() & 2) {
+							$image = imagecreatefromjpeg($file);
+							$image = imagescale($image, $new_width);
+							imagejpeg($image, $file);
+						}
+						break;
+					default:
+						break;
+				}
+				if ($image) {
+					imagedestroy($image);
+				}
+			}
+		}
+		return $file;
+	}
+
+	private function sendEmail( $subject, $filename ) {
+ 		$header = "Content-type: text/html; charset=utf-8 \r\n";
+ 		if ( $this->config['send_email_same_address'] == 1 ) {
+ 			$header .= "From: ".$this->config['email_address']." <".$this->config['email_address']."> \r\n";
+ 		}
+ 		$header .= "MIME-Version: 1.0 \r\n";
+ 		$header .= "Content-Transfer-Encoding: 8bit \r\n";
+ 		$header .= "Date: ".date("r (T)")." \r\n";
+ 		mail($this->config['email_address'], $subject, $filename, $header);
+ 	}
 
 	private function log( $d ) {
 		file_put_contents( $this->pathCombine( $this->getRootDir(), "debug.ifm.log" ), ( is_array( $d ) ? print_r( $d, true ) . "\n" : $d . "\n" ), FILE_APPEND );
@@ -1188,17 +1348,17 @@ IFM_ASSETS
 	private function getTypeIcon( $type ) {
 		$type = strtolower($type);
 		switch( $type ) {
-			case "aac": case "aiff": case "mid": case "mp3": case "wav": return 'icon icon-file-audio'; break;
-			case "ai": case "bmp": case "eps": case "tiff": case "gif": case "jpg": case "jpeg": case "png": case "psd": case "svg": return 'icon icon-file-image'; break;
-			case "avi": case "flv": case "mp4": case "mpg": case "mkv": case "mpeg": case "webm": case "wmv": case "mov": return 'icon icon-file-video'; break;
-			case "c": case "cpp": case "css": case "dat": case "h": case "html": case "java": case "js": case "php": case "py": case "sql": case "xml": case "yml": case "json": return 'icon icon-file-code'; break;
-			case "doc": case "docx": case "odf": case "odt": case "rtf": return 'icon icon-file-word'; break;
-			case "txt": case "log": return 'icon icon-doc-text'; break;
-			case "ods": case "xls": case "xlsx": return 'icon icon-file-excel'; break;
-			case "odp": case "ppt": case "pptx": return 'icon icon-file-powerpoint'; break;
-			case "pdf": return 'icon icon-file-pdf'; break;
-			case "tgz": case "zip": case "tar": case "tgz": case "tar.gz": case "tar.xz": case "tar.bz2": case "7z": case "rar": return 'icon icon-file-archive';
-			default: return 'icon icon-doc';
+			case "aac": case "aiff": case "mid": case "mp3": case "wav": return 'ifm-icon ifm-icon-file-audio'; break;
+			case "ai": case "bmp": case "eps": case "tiff": case "gif": case "jpg": case "jpeg": case "png": case "psd": case "svg": return 'ifm-icon ifm-icon-file-image'; break;
+			case "avi": case "flv": case "mp4": case "mpg": case "mkv": case "mpeg": case "webm": case "wmv": case "mov": return 'ifm-icon ifm-icon-file-video'; break;
+			case "c": case "cpp": case "css": case "dat": case "h": case "html": case "java": case "js": case "php": case "py": case "sql": case "xml": case "yml": case "json": return 'ifm-icon ifm-icon-file-code'; break;
+			case "doc": case "docx": case "odf": case "odt": case "rtf": return 'ifm-icon ifm-icon-file-word'; break;
+			case "txt": case "log": return 'ifm-icon ifm-icon-doc-text'; break;
+			case "ods": case "xls": case "xlsx": return 'ifm-icon ifm-icon-file-excel'; break;
+			case "odp": case "ppt": case "pptx": return 'ifm-icon ifm-icon-file-powerpoint'; break;
+			case "pdf": return 'ifm-icon ifm-icon-file-pdf'; break;
+			case "tgz": case "zip": case "tar": case "tgz": case "tar.gz": case "tar.xz": case "tar.bz2": case "7z": case "rar": return 'ifm-icon ifm-icon-file-archive';
+			default: return 'ifm-icon ifm-icon-doc';
 		}
 	}
 

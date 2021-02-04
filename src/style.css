@@ -1,8 +1,10 @@
+/*
 body {
 	padding-top: 70px;
 	overflow-y: scroll !important;
 	padding-right: 0px !important;
 }
+*/
 
 main {
 	margin-bottom: 1rem;
@@ -33,18 +35,20 @@ div#content { /* is for the ACE editor */
 }
 
 /* narrow navbar */
+/*
 .navbar {
 	padding: 0.3rem !important;
 }
+*/
 
 /*
  * Icon size
  */
-.icon {
+.ifm-icon {
 	font-size: 14pt;
 }
 @media (max-width: 768px) {
-	.icon { font-size: 12pt; }
+	.ifm-icon { font-size: 12pt; }
 	#filetable tr th.buttons { min-width: 85px !important; }
 }
 
@@ -171,14 +175,14 @@ table.dataTable thead th.sorting_desc:after {
 	color: #000;
 }
 table.dataTable thead th.sorting:after {
-	content: "\F0DC";
+	content: "\F0DC" !important;
 	color: #ddd;
 }
 table.dataTable thead th.sorting_asc:after {
-	content: "\f0de";
+	content: "\f0de" !important;
 }
 table.dataTable thead th.sorting_desc:after {
-	content: "\f0dd";
+	content: "\f0dd" !important;
 }
 
 /*
@@ -201,4 +205,14 @@ table.dataTable thead th.sorting_desc:after {
 	.modal-lg, .modal-xl {
 		max-width: 800px;
 	}
+}
+
+#ifm a {
+    color: inherit;
+}
+
+.page-item.active .page-link {
+    color: #000000 !important;
+    background-color: inherit;
+    border-color: #000000;
 }

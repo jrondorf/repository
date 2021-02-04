@@ -13,7 +13,9 @@ define( "IFM_VERSION",       "v2.6.3" );
 define( "IFM_RELEASE_DIR",   "dist/");
 define( "IFM_STANDALONE",    "ifm.php" );
 define( "IFM_STANDALONE_GZ", "ifm.min.php" );
-define( "IFM_LIB",           "libifm.php" );
+define( "IFM_LIB",           "repo.php" );
+define( "REPO_CSS",          "repo.css" );
+define( "REPO_JS",           "repo.js" );
 
 // php source files
 $IFM_SRC_PHP = array(
@@ -47,7 +49,7 @@ if (!empty($langs)) {
 if (!in_array("all", $langs) || !in_array("en", $langs))
 	array_push($langs, "en");
 
-if (in_array("all", $langs))
+//if (in_array("all", $langs))
 	$langs = array_map(
 		function($lang_file) {return pathinfo($lang_file)['filename']; },
 		glob("src/i18n/*.json")
@@ -84,6 +86,31 @@ $includes = NULL;
 preg_match_all( "/\@\@\@file:([^\@]+)\@\@\@/", $compiled, $includes, PREG_SET_ORDER );
 foreach( $includes as $file )
 	$compiled = str_replace( $file[0], file_get_contents( $file[1] ), $compiled );
+
+$compiled_css = file_get_contents("src/assets.repo_css");
+preg_match_all( "/\@\@\@file:([^\@]+)\@\@\@/", $compiled_css, $includes, PREG_SET_ORDER );
+foreach( $includes as $file )
+	$compiled_css = str_replace( $file[0], file_get_contents( $file[1] ), $compiled_css );
+file_put_contents( IFM_RELEASE_DIR . REPO_CSS, $compiled_css );
+
+$compiled_js = file_get_contents("src/assets.repo_js");
+preg_match_all( "/\@\@\@file:([^\@]+)\@\@\@/", $compiled_js, $includes, PREG_SET_ORDER );
+foreach( $includes as $file )
+	$compiled_js = str_replace( $file[0], file_get_contents( $file[1] ), $compiled_js );
+// Process ace includes
+$vars['ace_includes'] = "";
+preg_match_all( "/\@\@\@acedir:([^\@]+)\@\@\@/", $compiled_js, $includes, PREG_SET_ORDER );
+foreach( $includes as $dir ) {
+	$dircontent = "";
+	foreach( glob( $dir[1]."/*" ) as $file ) {
+		if( is_file( $file ) && is_readable( $file ) ) {
+			$vars['ace_includes'] .= "|" . substr( basename( $file ), 0, strrpos( basename( $file ), "." ) );
+			$dircontent .= file_get_contents( $file )."\n\n";
+		}
+	}
+	$compiled_js = str_replace( $dir[0], $dircontent, $compiled_js );
+}
+file_put_contents( IFM_RELEASE_DIR . REPO_JS, $compiled_js );
 
 // Process ace includes
 $includes = NULL;
