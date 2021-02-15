@@ -333,7 +333,7 @@ IFM_ASSETS
 	}
 
 	private static function isMemberOfGroup($required_groups) {
-		$required_groups = array_map(self::sanitizeString, explode(',', $required_groups));
+		$required_groups = array_map('self::sanitizeString', explode(',', $required_groups));
 		if (!empty($required_groups[0]) && empty(array_intersect($required_groups, $_SESSION['login_groups']))) {
 			return false;
 		} else {
@@ -361,7 +361,6 @@ IFM_ASSETS
 	public static function init($auth, $username, $password_hash, $subdomain, $directory, $subdirectoryUser, $adminGroup, $timezone, $dateLocale, $language, $scale_image, $image_width, $image_height) {
 		$subdomain = self::normalizeDirectory($subdomain);
 		$directory = self::normalizeDirectory($directory);
-
 		if ($auth == 1) {
 			$auth_source = 'inline;' . trim($username) . ':' . trim($password_hash);
 		} else {
@@ -369,8 +368,8 @@ IFM_ASSETS
 			if ($subdirectoryUser == 1) {
 				if (!empty($_SESSION)) {
 					if (array_key_exists('login', $_SESSION) && $_SESSION['login'] == true) {
-						if (!isMemberOfGroup($adminGroup)) {
-							$directory = $directory . normalizeDirectory($_SESSION['login_username']);
+						if (!self::isMemberOfGroup($adminGroup)) {
+							$directory = $directory . self::normalizeDirectory($_SESSION['login_username']);
 						}
 					}
 				}
