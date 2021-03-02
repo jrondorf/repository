@@ -1,5 +1,9 @@
 <?php
 
+//////////////////////////////////////////////////
+// Bric Version 1.0.3
+//////////////////////////////////////////////////
+
 /* =======================================================================
  * Improved File Manager
  * ---------------------
@@ -1183,7 +1187,7 @@ IFM_ASSETS
 					else
 						$this->jsonResponse( array( "status"=>"ERROR", "message"=>"not authenticated" ) );
 				} else {
-					$this->loginForm($login_failed);
+					$this->loginForm($login_failed, $this->l['login_failed']);
 				}
 				return false;
 			}
@@ -1254,13 +1258,13 @@ IFM_ASSETS
 		$err = "";
 		if( $loginFailed ) 
 			$err = '<div class="alert alert-danger" role="alert">'.$loginMessage.'</div>';
-		$this->getHTMLHeader();
+		// $this->getHTMLHeader();
 		$html = str_replace( "{{error}}", $err, $this->templates['login'] );
 		$html = str_replace( "{{i18n.username}}", $this->l['username'], $html );
 		$html = str_replace( "{{i18n.password}}", $this->l['password'], $html );
 		$html = str_replace( "{{i18n.login}}", $this->l['login'], $html );
 		print $html;
-		$this->getHTMLFooter();
+		// $this->getHTMLFooter();
 	}
 
 	private function filePermsDecode( $perms ) {
