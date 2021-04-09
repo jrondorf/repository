@@ -209,6 +209,7 @@ table.dataTable thead th.sorting_desc:after {
 
 #ifm a {
     color: inherit;
+	text-decoration: none;
 }
 
 .page-item.active .page-link {
