@@ -134,7 +134,12 @@ function IFM(params) {
 					item.download.icon = "ifm-icon ifm-icon-download";
 				}
 				if( item.icon.indexOf( 'file-image' ) !== -1  ) {
-					item.popover = 'data-toggle="popover"';
+					// item.popover = 'data-toggle="popover"';
+					var caption = item.name;
+					if (item.dimensions) {
+						caption = caption + ' (' + item.dimensions + ')';
+					}
+					item.popover = 'data-caption="'+ caption +'"';
 				}
 				if( self.config.extract && self.inArray( item.ext, ["zip","tar","tgz","tar.gz","tar.xz","tar.bz2"] ) ) {
 					item.eaction = "extract";
@@ -243,6 +248,12 @@ function IFM(params) {
 					e.stopPropagation();
 					e.preventDefault();
 					self.changeDirectory( ifmitem.parentElement.parentElement.dataset.filename );
+				} else if (ifmitem.dataset.caption) {
+					e.stopPropagation();
+					e.preventDefault();
+					baguetteBox.show(0, baguetteBox.run('#'+ifmitem.id, {
+						animation: false
+					})[0]);
 				}
 			} else if( e.target.parentElement.name == 'start_download' ) {
 				e.stopPropagation();
@@ -272,32 +283,33 @@ function IFM(params) {
 			}
 		});
 		// has to be jquery, since this is a bootstrap feature
-		$( 'a[data-toggle="popover"]' ).popover({
-			content: function() {
-				var item = self.fileCache.find( x => x.guid == $(this).attr('id') );
-				var popover = document.createElement( 'img' );
-				if( self.config.isDocroot )
-					popover.src = encodeURI( self.pathCombine( self.currentDir, item.name ) ).replace( '#', '%23' ).replace( '?', '%3F' );
-				else
-					popover.src = self.api + "?api=proxy&dir=" + encodeURIComponent( self.currentDir ) + "&filename=" + encodeURIComponent( item.name );
-				popover.classList.add( 'imgpreview' );
-				return popover;
-			},
-			animated: 'fade',
-			placement: 'bottom',
-			trigger: 'hover',
-			html: true
-		});
+		// $( 'a[data-toggle="popover"]' ).popover({
+		// 	content: function() {
+		// 		var item = self.fileCache.find( x => x.guid == $(this).attr('id') );
+		// 		var popover = document.createElement( 'img' );
+		// 		if( self.config.isDocroot )
+		// 			popover.src = encodeURI( self.pathCombine( self.currentDir, item.name ) ).replace( '#', '%23' ).replace( '?', '%3F' );
+		// 		else
+		// 			popover.src = self.api + "?api=proxy&dir=" + encodeURIComponent( self.currentDir ) + "&filename=" + encodeURIComponent( item.name );
+		// 		popover.classList.add( 'imgpreview' );
+		// 		return popover;
+		// 	},
+		// 	animated: 'fade',
+		// 	placement: 'bottom',
+		// 	trigger: 'hover',
+		// 	html: true
+		// });
 
 		if( self.config.contextmenu && !!( self.config.edit || self.config.extract || self.config.rename || self.config.copymove || self.config.download || self.config.delete ) ) {
 			// create the context menu, this also uses jquery, AFAIK
-			var contextMenu = new BootstrapMenu( '.clickable-row', {
+			var contextMenu = new BootstrapMenu( '.context-menu', {
+				menuEvent: 'click',
 				fetchElementData: function( row ) {
 					var data = {};
 					data.selected =
 						Array.prototype.slice.call( document.getElementsByClassName( 'selectedItem' ) )
-						.map( function(e){ return self.fileCache.find( x => x.guid == e.children[0].children[0].id ); } );
-					data.clicked = self.fileCache.find( x => x.guid == row[0].children[0].children[0].id );
+						.map( function(e){ return self.fileCache.find( x => x.guid == e[0].dataset.id ); } );
+					data.clicked = self.fileCache.find( x => x.guid == row[0].dataset.id );
 					return data;
 				},
 				actionsGroups:[

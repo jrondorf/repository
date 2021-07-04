@@ -14,7 +14,7 @@
 	</td>
 	{{#config.download}}
 	<td>
-		<a href="{{download.link}}"><span class="{{download.icon}}"></span></a>
+		<span data-id="{{guid}}" class="context-menu ifm-icon ifm-icon-cog"></span>
 	</td>
 	{{/config.download}}
 	{{#config.showlastmodified}}
@@ -23,6 +23,9 @@
 	{{#config.showfilesize}}
 	<td data-order="{{size_raw}}">{{size}}</td>
 	{{/config.showfilesize}}
+	{{#config.showdimensions}}
+	<td class="d-none d-md-table-cell">{{dimensions}}</td>
+	{{/config.showdimensions}}
 	{{#config.showpermissions}}
 	<td class="d-none d-md-table-cell">
 		<input type="text" size="11" name="newpermissions" class="form-control {{filepermmode}}" value="{{fileperms}}" data-filename="{{name}}" {{readonly}}>

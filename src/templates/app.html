@@ -1,12 +1,12 @@
 <nav class="navbar navbar-expand-lg navbar-light 
 	{{^config.inline}}
 	fixed-top
-	{{/config.inline}} bg-light mb-3">
-	<div class="container">
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="true" aria-label="{{i18n.toggle_nav}}">
+	{{/config.inline}} bg-transparent mb-3">
+	<div class="{{config.container}}">
+		<button class="navbar-toggler mb-1" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#ifm-navbarCollapse" data-bs-target="#ifm-navbarCollapse" aria-controls="ifm-navbarCollapse" aria-expanded="true" aria-label="{{i18n.toggle_nav}}">
 			<span class="navbar-toggler-icon"></span>
 		</button>
-		<div class="collapse navbar-collapse" id="navbarCollapse">
+		<div class="collapse navbar-collapse" id="ifm-navbarCollapse">
 			<div class="navbar-nav mr-auto">
 				<form class="form-inline mt-2 mt-md-0">
 					<div class="input-group">
@@ -43,22 +43,21 @@
 					<a id="createDir" class="nav-link"><span title="{{i18n.folder_new}}" class="ifm-icon ifm-icon-folder" href="#"></span> <span class="d-inline d-lg-none">{{i18n.folder_new}}</span></a>
 				</li>
 				{{/config.createdir}}
-				{{#generic.hasdropdown}}
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="#" id="menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="menu">
-						{{#config.remoteupload}}
-						<a class="dropdown-item" href="#" id="buttonRemoteUpload"><span class="ifm-icon ifm-icon-upload-cloud"></span> {{i18n.upload_remote}}</a>
-						{{/config.remoteupload}}
-						{{#config.ajaxrequest}}
-						<a class="dropdown-item" href="#" id="buttonAjaxRequest"><span class="ifm-icon ifm-icon-link-ext"></span> {{i18n.ajax_request}}</a>
-						{{/config.ajaxrequest}}
-						{{#config.auth}}
-						<a class="dropdown-item" href="?api=logout" id="buttonLogout"><span class="ifm-icon ifm-icon-logout"></span> {{i18n.logout}}</a>
-						{{/config.auth}}
-					</div>
+				{{#config.remoteupload}}
+				<li class="nav-item">
+					<a class="nav-link" href="#" id="buttonRemoteUpload"><span class="ifm-icon ifm-icon-upload-cloud"></span> <span class="d-inline d-lg-none">{{i18n.upload_remote}}</span></a>
 				</li>
-				{{/generic.hasdropdown}}
+				{{/config.remoteupload}}
+				{{#config.ajaxrequest}}
+				<li class="nav-item">
+					<a class="nav-link" href="#" id="buttonAjaxRequest"><span class="ifm-icon ifm-icon-link-ext"></span> <span class="d-inline d-lg-none">{{i18n.ajax_request}}</span></a>
+				</li>
+				{{/config.ajaxrequest}}
+				{{#config.auth}}
+				<li class="nav-item">
+					<a class="nav-link" href="?api=logout" id="buttonLogout"><span class="ifm-icon ifm-icon-logout"></span> <span class="d-inline d-lg-none">{{i18n.logout}}</span></a>
+				</li>
+				{{/config.auth}}
 			</ul>
 		</div>
 	</div>
@@ -67,7 +66,7 @@
 	<h1>{{i18n.upload_drop}}</h1>
 </div>
 <main role="main">
-	<div class="container">
+	<div class="{{config.container}}">
 		<table id="filetable" class="table">
 			<thead>
 				<tr>
@@ -82,6 +81,9 @@
 					{{#config.showfilesize}}
 					<th class="th-size">{{i18n.size}}</th>
 					{{/config.showfilesize}}
+					{{#config.showdimensions}}
+					<th class="th-dimensions d-none d-md-table-cell">{{i18n.dimensions}}</th>
+					{{/config.showdimensions}}
 					{{#config.showpermissions}}
 					<th class="th-permissions d-none d-md-table-cell">{{i18n.permissions}}</th>
 					{{/config.showpermissions}}
