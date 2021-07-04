@@ -55,6 +55,7 @@ class IFM {
 		"showowner" => 1,
 		"showgroup" => 1,
 		"showpermissions" => 2,
+		"showdimensions" => 1,
 		"showhtdocs" => 0,
 		"showhiddenfiles" => 1,
 		"showpath" => 0,
@@ -63,8 +64,9 @@ class IFM {
 		"showrefresh" => 1,
 		"forceproxy" => 0,
 		"confirmoverwrite" => 1,
-
-		"scale_image" => false,
+		"container" => 'container',
+		"lightbox" => 'container',
+		"scale_image" => 1,
 		"image_width" => 0,
 		"image_height" => 0
 	);
@@ -109,6 +111,7 @@ class IFM {
 		$this->config['showowner'] =  getenv('IFM_GUI_SHOWOWNER') !== false ? intval( getenv('IFM_GUI_SHOWOWNER') ) : $this->config['showowner'] ;
 		$this->config['showgroup'] =  getenv('IFM_GUI_SHOWGROUP') !== false ? intval( getenv('IFM_GUI_SHOWGROUP') ) : $this->config['showgroup'] ;
 		$this->config['showpermissions'] =  getenv('IFM_GUI_SHOWPERMISSIONS') !== false ? intval( getenv('IFM_GUI_SHOWPERMISSIONS') ) : $this->config['showpermissions'] ;
+		$this->config['showdimensions'] =  getenv('IFM_GUI_SHOWDIMENSIONS') !== false ? intval( getenv('IFM_GUI_SHOWDIMENSIONS') ) : $this->config['showdimensions'] ;
 		$this->config['showhtdocs'] =  getenv('IFM_GUI_SHOWHTDOCS') !== false ? intval( getenv('IFM_GUI_SHOWHTDOCS') ) : $this->config['showhtdocs'] ;
 		$this->config['showhiddenfiles'] =  getenv('IFM_GUI_SHOWHIDDENFILES') !== false ? intval( getenv('IFM_GUI_SHOWHIDDENFILES') ) : $this->config['showhiddenfiles'] ;
 		$this->config['showpath'] =  getenv('IFM_GUI_SHOWPATH') !== false ? intval( getenv('IFM_GUI_SHOWPATH') ) : $this->config['showpath'] ;
@@ -117,6 +120,7 @@ class IFM {
 		$this->config['showrefresh'] =  getenv('IFM_GUI_REFRESH') !== false ? intval( getenv('IFM_GUI_REFRESH') ) : $this->config['showrefresh'] ;
 		$this->config['forceproxy'] =  getenv('IFM_GUI_FORCEPROXY') !== false ? intval( getenv('IFM_GUI_FORCEPROXY') ) : $this->config['forceproxy'] ;
 		$this->config['confirmoverwrite'] =  getenv('IFM_GUI_CONFIRMOVERWRITE') !== false ? intval( getenv('IFM_GUI_CONFIRMOVERWRITE') ) : $this->config['confirmoverwrite'] ;
+		$this->config['container'] =  getenv('IFM_CONTAINER') !== false ? intval( getenv('IFM_CONTAINER') ) : $this->config['container'] ;
 		$this->config['scale_image'] =  getenv('IFM_SCALE_IMAGE') !== false ? intval( getenv('IFM_SCALE_IMAGE') ) : $this->config['scale_image'] ;
 		$this->config['image_width'] =  getenv('IFM_IMAGE_WIDTH') !== false ? intval( getenv('IFM_IMAGE_WIDTH') ) : $this->config['image_width'] ;
 		$this->config['image_height'] =  getenv('IFM_IMAGE_HEIGHT') !== false ? intval( getenv('IFM_IMAGE_HEIGHT') ) : $this->config['image_height'] ;
@@ -345,7 +349,7 @@ IFM_ASSETS
 		}
 	}
 
-	private static function normalizeDirectory($dir) {
+	public static function normalizeDirectory($dir) {
 		$dir = trim($dir);
 		if ($dir !== '') {
 			if ($dir == '/') {
@@ -517,6 +521,18 @@ IFM_ASSETS
 				$grouparr = posix_getgrgid( filegroup( $name ) );
 				$item["group"] = $grouparr['name'];
 			} else $item["group"] = false;
+		}
+		if( $this->config['showdimensions'] == 1 ) {
+			if (strpos($item["icon"], 'ifm-icon-file-image') !== false) {
+				$size = getimagesize($name);
+				if ($size) {
+					$item["dimensions"] = $size[0] . ' x ' . $size[1];
+				} else {
+					$item["dimensions"] = '';
+				}
+			} else {
+				$item["dimensions"] = '';
+			}
 		}
 		return $item;
 	}
@@ -1202,7 +1218,7 @@ IFM_ASSETS
 			case "inline":
 				list( $uname, $hash ) = explode( ":", $srcopt );
 				$htpasswd = new Htpasswd();
-				return $htpasswd->verifyPassword( $pass, $hash ) ? ( $uname == $user ) : false;
+				return $htpasswd->verifyPassword( $pass, $hash ) ? ( strcasecmp(trim($uname), trim($user)) == 0 ) : false;
 				break;
 			case "file":
 				if( @file_exists( $srcopt ) && @is_readable( $srcopt ) ) {
