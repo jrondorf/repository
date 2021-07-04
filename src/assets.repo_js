@@ -38,6 +38,9 @@
 /* includes/ace */
 @@@acedir:src/includes/ace@@@
 
+/* includes/baguetteBox.min.js */
+@@@file:src/includes/baguetteBox.min.js@@@
+
 /* includes/ifm.js */
 @@@file:src/ifm.js@@@
 

@@ -16,5 +16,8 @@
 /* includes/animation.css */
 @@@file:src/includes/animation.css@@@
 
+/* includes/baguetteBox.min.css */
+@@@file:src/includes/baguetteBox.min.css@@@
+
 /* style.css */
 @@@file:src/style.css@@@
