@@ -64,11 +64,16 @@ class IFM {
 		"showrefresh" => 1,
 		"forceproxy" => 0,
 		"confirmoverwrite" => 1,
-		"container" => 'container',
-		"lightbox" => 'container',
+		"container" => "container",
 		"scale_image" => 1,
 		"image_width" => 0,
-		"image_height" => 0
+		"image_height" => 0,
+
+		// notifications
+		"email_address" => "",
+		"send_email_same_address" => 0,
+		"send_email_upload" => 0,
+		"email_subject_upload" => ""
 	);
 
 	private $config = array();
@@ -124,6 +129,10 @@ class IFM {
 		$this->config['scale_image'] =  getenv('IFM_SCALE_IMAGE') !== false ? intval( getenv('IFM_SCALE_IMAGE') ) : $this->config['scale_image'] ;
 		$this->config['image_width'] =  getenv('IFM_IMAGE_WIDTH') !== false ? intval( getenv('IFM_IMAGE_WIDTH') ) : $this->config['image_width'] ;
 		$this->config['image_height'] =  getenv('IFM_IMAGE_HEIGHT') !== false ? intval( getenv('IFM_IMAGE_HEIGHT') ) : $this->config['image_height'] ;
+		$this->config['email_address'] =  getenv('IFM_EMAIL_ADDRESS') !== false ? intval( getenv('IFM_EMAIL_ADDRESS') ) : $this->config['email_address'] ;
+		$this->config['send_email_same_address'] =  getenv('IFM_SEND_EMAIL_SAME_ADDRESS') !== false ? intval( getenv('IFM_SEND_EMAIL_SAME_ADDRESS') ) : $this->config['send_email_same_address'] ;
+		$this->config['send_email_upload'] =  getenv('IFM_SEND_EMAIL_UPLOAD') !== false ? intval( getenv('IFM_SEND_EMAIL_UPLOAD') ) : $this->config['send_email_upload'] ;
+		$this->config['email_subject_upload'] =  getenv('IFM_EMAIL_SUBJECT_UPLOAD') !== false ? intval( getenv('IFM_EMAIL_SUBJECT_UPLOAD') ) : $this->config['email_subject_upload'] ;
 
 		// optional settings
 		if( getenv('IFM_SESSION_LIFETIME') !== false )
@@ -350,6 +359,7 @@ IFM_ASSETS
 	}
 
 	public static function normalizeDirectory($dir) {
+		// TODO DIRECTORY_SEPARATOR
 		$dir = trim($dir);
 		if ($dir !== '') {
 			if ($dir == '/') {
@@ -719,7 +729,7 @@ IFM_ASSETS
 		if( isset( $d['filename'] ) && $this->isFilenameValid( $d['filename'] ) ) {
 			if( isset( $d['content'] ) ) {
 				// work around magic quotes
-				$content = get_magic_quotes_gpc() == 1 ? stripslashes( $d['content'] ) : $d['content'];
+				$content = $d['content'];
 				if( @file_put_contents( $d['filename'], $content ) !== false ) {
 					$this->jsonResponse( array( "status" => "OK", "message" => $this->l['file_save_success'] ) );
 				} else
@@ -894,6 +904,8 @@ IFM_ASSETS
 						if( move_uploaded_file( $_FILES['file']['tmp_name'], $newfilename ) ) {
 							$this->scaleImage($newfilename, $this->config['scale_image'], $this->config['image_width'], $this->config['image_height']);
 							$this->jsonResponse( array( "status" => "OK", "message" => $this->l['file_upload_success'], "cd" => $d['dir'] ) );
+							if ( $this->config['send_email_upload'] == 1 )
+								$this->sendEmail($this->config['email_subject_upload'], $d['dir'] . '/' . $newfilename);
 						}
 						else
 							$this->jsonResponse( array( "status" => "ERROR", "message" => $this->l['file_upload_error'] ) );
