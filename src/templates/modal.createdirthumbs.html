@@ -1,0 +1,32 @@
+<form id="formCreateDirThumbs">
+<div class="modal-body">
+	<fieldset>
+		<div class="form-group">
+			<label for="dirname">{{i18n.thumbs_directoryname}}:</label>
+			<input class="form-control" id="dirname" type="text" name="dirname" value="thumbs" />
+		</div>
+		<div class="row">
+			<div class="form-group col">
+				<label for="width">{{i18n.width}}:</label>
+				<input class="form-control" id="width" type="number" name="width" value="400" />
+			</div>
+			<div class="form-group col-md-6">
+				<label for="height">{{i18n.height}}:</label>
+				<input class="form-control" id="height" type="number" name="height" value="400" />
+			</div>
+		</div>
+		<div class="form-check mt-1">
+			<label class="form-check-label" for="square">{{i18n.thumbs_square}}</label>
+			<input class="form-check-input" id="square" type="checkbox" name="square" value="" />
+		</div>
+		<div class="form-check mt-1">
+			<label class="form-check-label" for="overwrite">{{i18n.file_overwrite}}</label>
+			<input class="form-check-input" id="overwrite" type="checkbox" name="overwrite" value="" />
+		</div>
+	</fieldset>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-success" id="buttonSave">{{i18n.save}}</button>
+	<button type="button" class="btn btn-danger" id="buttonCancel">{{i18n.cancel}}</button>
+</div>
+</form>

@@ -43,6 +43,11 @@
 					<a id="createDir" class="nav-link"><span title="{{i18n.folder_new}}" class="ifm-icon ifm-icon-folder" href="#"></span> <span class="d-inline d-lg-none">{{i18n.folder_new}}</span></a>
 				</li>
 				{{/config.createdir}}
+				{{#config.createdirthumbs}}
+				<li class="nav-item">
+					<a id="createDirThumbs" class="nav-link"><span title="{{i18n.thumbs_folder_new}}" class="ifm-icon ifm-icon-file-image" href="#"></span> <span class="d-inline d-lg-none">{{i18n.thumbs_folder_new}}</span></a>
+				</li>
+				{{/config.createdirthumbs}}
 				{{#config.remoteupload}}
 				<li class="nav-item">
 					<a class="nav-link" href="#" id="buttonRemoteUpload"><span class="ifm-icon ifm-icon-upload-cloud"></span> <span class="d-inline d-lg-none">{{i18n.upload_remote}}</span></a>

@@ -8,7 +8,7 @@
     <?php
     require_once('dist/repo.php');
     $defaultconfig = array(
-      "root_dir" => realpath('./test'),
+      "root_dir" => realpath('.'),
       // "root_public_url" => 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . "%id=root_dir%",
       
       // 	// api controls

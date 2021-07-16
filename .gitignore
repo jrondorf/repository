@@ -5,3 +5,4 @@ src/includes/ace/*
 sftp-config.json
 dist/*
 .DS_Store
+test

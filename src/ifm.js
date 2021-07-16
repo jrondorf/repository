@@ -625,7 +625,7 @@ function IFM(params) {
 						else if( data.status == "OK" && data.data.content == null ) {
 							self.showMessage( self.i18n.file_load_error, "e" );
 						}
-						else self.showMessage( self.i18n.error +data.message, "e" );
+						else self.showMessage( self.i18n.error + data.message, "e" );
 					},
 			error: function() { self.showMessage( self.i18n.file_display_error, "e" ); }
 		});
@@ -657,6 +657,39 @@ function IFM(params) {
 	};
 
 	/**
+	 * Shows the create thumbs directory dialog
+	 */
+	 this.showCreateDirThumbsDialog = function() {
+		self.showModal( Mustache.render( self.templates.createdirthumbs, { i18n: self.i18n } ) );
+		var form = document.forms.formCreateDirThumbs;
+		form.elements.dirname.addEventListener( 'keypress', function( e ) {
+			if(e.key == 'Enter' ) {
+				e.preventDefault();
+				self.createDirThumbs( form.elements.dirname.value, 
+					form.elements.width.value, 
+					form.elements.height.value, 
+					form.elements.square.checked,
+					form.elements.overwrite.checked );
+				self.hideModal();
+			}
+		});
+		form.addEventListener( 'click', function( e ) {
+			if( e.target.id == 'buttonSave' ) {
+				e.preventDefault();
+				self.createDirThumbs( form.elements.dirname.value, 
+					form.elements.width.value, 
+					form.elements.height.value, 
+					form.elements.square.checked,
+					form.elements.overwrite.checked );
+				self.hideModal();
+			} else if( e.target.id == 'buttonCancel' ) {
+				e.preventDefault();
+				self.hideModal();
+			}
+		}, false );
+	};
+
+	/**
 	 * Create a directory
 	 */
 	this.createDir = function( dirname ) {
@@ -675,7 +708,37 @@ function IFM(params) {
 						self.refreshFileTable();
 					}
 					else {
-						self.showMessage( self.i18n.folder_create_error +data.message, "e" );
+						self.showMessage( self.i18n.folder_create_error, "e" );
+					}
+				},
+			error: function() { self.showMessage( self.i18n.general_error, "e" ); }
+		});
+	};
+
+	/**
+	 * Create a thumbs directory
+	 */
+	 this.createDirThumbs = function( dirname, width, height, square, overwrite ) {
+		$.ajax({
+			url: self.api,
+			type: "POST",
+			data: ({
+				api: "createDirThumbs",
+				dir: self.currentDir,
+				dirname: dirname,
+				width: width,
+				height: height,
+				square: square,
+				overwrite: overwrite
+			}),
+			dataType: "json",
+			success: function( data ){
+					if( data.status == "OK" ) {
+						self.showMessage( self.i18n.folder_create_success, "s" );
+						self.refreshFileTable();
+					}
+					else {
+						self.showMessage( self.i18n.folder_create_error, "e" );
 					}
 				},
 			error: function() { self.showMessage( self.i18n.general_error, "e" ); }
@@ -779,7 +842,7 @@ function IFM(params) {
 						if(data.status == "OK") {
 							ifm.showMessage( self.i18n.file_rename_success, "s");
 							ifm.refreshFileTable();
-						} else ifm.showMessage( self.i18n.file_rename_error +data.message, "e");
+						} else ifm.showMessage( self.i18n.file_rename_error + data.message, "e");
 					},
 			error: function() { ifm.showMessage( self.i18n.general_error, "e"); }
 		});
@@ -1309,7 +1372,7 @@ function IFM(params) {
 		var element = ( self.config.inline ) ? self.rootElement : "body";
 		$.notify(
 			{ message: m },
-			{ type: msgType, delay: 3000, mouse_over: 'pause', offset: { x: 15, y: 65 }, element: element }
+			{ type: msgType, delay: 1, mouse_over: 'pause', offset: { x: 15, y: 65 }, element: element }
 		);
 	};
 
@@ -1681,6 +1744,13 @@ function IFM(params) {
 				}
 				return;
 				break;
+			case 'T':
+				if( self.config.createdirthumbs ) {
+					e.preventDefault();
+					self.showCreateDirThumbsDialog();
+				}
+				return;
+				break;
 			case 'h':
 			case 'ArrowLeft':
 			case 'Backspace':
@@ -1888,6 +1958,8 @@ function IFM(params) {
 			document.getElementById( 'createFile' ).onclick = function() { self.showFileDialog(); };
 		if( self.config.createdir )
 			document.getElementById( 'createDir' ).onclick = function() { self.showCreateDirDialog(); };
+		if( self.config.createdirthumbs )
+			document.getElementById( 'createDirThumbs' ).onclick = function() { self.showCreateDirThumbsDialog(); };
 		if( self.config.upload )
 			document.getElementById( 'upload' ).onclick = function() { self.showUploadFileDialog(); };
 		document.getElementById( 'currentDir' ).onkeypress = function( e ) {

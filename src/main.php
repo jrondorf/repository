@@ -36,6 +36,7 @@ class IFM {
 		"chmod" => 1,
 		"copymove" => 1,
 		"createdir" => 1,
+		"createdirthumbs" => 1,
 		"createfile" => 1,
 		"edit" => 1,
 		"delete" => 1,
@@ -65,7 +66,7 @@ class IFM {
 		"forceproxy" => 0,
 		"confirmoverwrite" => 1,
 		"container" => "container",
-		"scale_image" => 1,
+		"scale_image" => 0,
 		"image_width" => 0,
 		"image_height" => 0,
 
@@ -73,7 +74,10 @@ class IFM {
 		"email_address" => "",
 		"send_email_same_address" => 0,
 		"send_email_upload" => 0,
-		"email_subject_upload" => ""
+		"email_subject_upload" => "",
+
+		"blacklist_file_ext_array" => array(),
+		"whitelist_file_ext_array" => array()
 	);
 
 	private $config = array();
@@ -101,6 +105,7 @@ class IFM {
 		$this->config['chmod'] =  getenv('IFM_API_CHMOD') !== false ? intval( getenv('IFM_API_CHMOD') ) : $this->config['chmod'] ;
 		$this->config['copymove'] =  getenv('IFM_API_COPYMOVE') !== false ? intval( getenv('IFM_API_COPYMOVE') ) : $this->config['copymove'] ;
 		$this->config['createdir'] =  getenv('IFM_API_CREATEDIR') !== false ? intval( getenv('IFM_API_CREATEDIR') ) : $this->config['createdir'] ;
+		$this->config['createdirthumbs'] =  getenv('IFM_API_CREATEDIRTHUMBS') !== false ? intval( getenv('IFM_API_CREATEDIRTHUMBS') ) : $this->config['createdirthumbs'] ;
 		$this->config['createfile'] =  getenv('IFM_API_CREATEFILE') !== false ? intval( getenv('IFM_API_CREATEFILE') ) : $this->config['createfile'] ;
 		$this->config['edit'] =  getenv('IFM_API_EDIT') !== false ? intval( getenv('IFM_API_EDIT') ) : $this->config['edit'] ;
 		$this->config['delete'] =  getenv('IFM_API_DELETE') !== false ? intval( getenv('IFM_API_DELETE') ) : $this->config['delete'] ;
@@ -133,6 +138,8 @@ class IFM {
 		$this->config['send_email_same_address'] =  getenv('IFM_SEND_EMAIL_SAME_ADDRESS') !== false ? intval( getenv('IFM_SEND_EMAIL_SAME_ADDRESS') ) : $this->config['send_email_same_address'] ;
 		$this->config['send_email_upload'] =  getenv('IFM_SEND_EMAIL_UPLOAD') !== false ? intval( getenv('IFM_SEND_EMAIL_UPLOAD') ) : $this->config['send_email_upload'] ;
 		$this->config['email_subject_upload'] =  getenv('IFM_EMAIL_SUBJECT_UPLOAD') !== false ? intval( getenv('IFM_EMAIL_SUBJECT_UPLOAD') ) : $this->config['email_subject_upload'] ;
+		$this->config['blacklist_file_ext_array'] =  getenv('IFM_BLACKLIST_FILE_EXT_ARRAY') !== false ? str_split( getenv('IFM_BLACKLIST_FILE_EXT_ARRAY') ) : $this->config['blacklist_file_ext_array'] ;
+		$this->config['whitelist_file_ext_array'] =  getenv('IFM_WHITELIST_FILE_EXT_ARRAY') !== false ? str_split( getenv('IFM_WHITELIST_FILE_EXT_ARRAY') ) : $this->config['whitelist_file_ext_array'] ;
 
 		// optional settings
 		if( getenv('IFM_SESSION_LIFETIME') !== false )
@@ -145,7 +152,7 @@ class IFM {
 
 		// get list of ace includes
 		$this->config['ace_includes'] = <<<'f00bar'
-@@@vars:ace_includes@@@
+		|ext-modelist|mode-css|mode-html|mode-ini|mode-javascript|mode-json|mode-markdown|mode-xml|mode-yaml
 f00bar;
 
 		// templates
@@ -173,6 +180,9 @@ f00bar;
 f00bar;
 		$templates['createdir'] = <<<'f00bar'
 @@@file:src/templates/modal.createdir.html@@@
+f00bar;
+	$templates['createdirthumbs'] = <<<'f00bar'
+@@@file:src/templates/modal.createdirthumbs.html@@@
 f00bar;
 		$templates['createarchive'] = <<<'f00bar'
 @@@file:src/templates/modal.createarchive.html@@@
@@ -294,6 +304,7 @@ IFM_ASSETS
 				$this->chDirIfNecessary( $_REQUEST['dir'] );
 				switch( $_REQUEST["api"] ) {
 					case "createDir": $this->createDir( $_REQUEST["dir"], $_REQUEST["dirname"] ); break;
+					case "createDirThumbs": $this->createDirThumbs( $_REQUEST ); break;
 					case "saveFile": $this->saveFile( $_REQUEST ); break;
 					case "getContent": $this->getContent( $_REQUEST ); break;
 					case "delete": $this->deleteFiles( $_REQUEST ); break;
@@ -339,6 +350,11 @@ IFM_ASSETS
 				$this->getInlineApplication();
 			}
 		}
+	}
+
+	private static function sanitizeFilename($value) {
+		$value = trim($value);
+		return $value;
 	}
 
 	private static function sanitizeString($value) {
@@ -412,6 +428,7 @@ IFM_ASSETS
 			"chmod" => 1,
 			"copymove" => 1,
 			"createdir" => 1,
+			"createdirthumbs" => 1,
 			"createfile" => 1,
 			"edit" => 1,
 			"delete" => 1,
@@ -708,6 +725,7 @@ IFM_ASSETS
 			$this->jsonResponse( array( "status" => "ERROR", "message" => $this->l['nopermissions'] ) );
 			exit( 1 );
 		}
+		$dn = $this->sanitizeFilename( $dn );
 		if( $dn == "" )
 			$this->jsonResponse( array( "status" => "ERROR", "message" => $this->l['invalid_dir'] ) );
 		elseif( ! $this->isFilenameValid( $dn ) )
@@ -717,6 +735,40 @@ IFM_ASSETS
 				$this->jsonResponse( array( "status" => "OK", "message" => $this->l['folder_create_success'] ) );
 			else
 				$this->jsonResponse( array( "status" => "ERROR", "message" => $this->l['folder_create_error'] ) );
+		}
+	}
+
+	// creates a thumbs directory
+	private function createDirThumbs( $d ) {
+		// $_REQUEST["dir"], $_REQUEST["dirname"], $_REQUEST["width"], $_REQUEST["height"], $_REQUEST["square"], $_REQUEST["overwrite"]
+		if( $this->config['createdirthumbs'] != 1 ) {
+			$this->jsonResponse( array( "status" => "ERROR", "message" => $this->l['nopermissions'] ) );
+			exit( 1 );
+		}
+		$dn = $this->sanitizeFilename($d['dirname']);
+		if( $dn == "" )
+			$this->jsonResponse( array( "status" => "ERROR", "message" => $this->l['invalid_dir'] ) );
+		elseif( ! $this->isFilenameValid( $dn ) )
+			$this->jsonResponse( array( "status" => "ERROR", "message" => $this->l['invalid_dir'] ) );
+		else {
+			if ( ( file_exists( $dn ) && is_dir( $dn ) ) || @mkdir( $dn ) ) {
+				$files = glob(realpath($d["dir"]) . '*');
+				$overwrite = $d["overwrite"] === "true" ? true : false;
+				$square = $d["square"] === "true" ? true : false;
+				foreach ($files as $file) {
+					if (!is_dir($file) && preg_match('/^.*\.(jpg|jpeg|png|gif)$/i', $file)) {
+						$newfilename = $this->pathCombine( realpath($d["dir"]), $dn, $file );
+						if ($overwrite || !file_exists( $newfilename )) {
+							if ($this->xcopy( $file, $dn )) {
+								$this->scaleImage($newfilename, true, $d["width"], $d["height"]);
+							}
+						}
+					}
+				}
+				$this->jsonResponse( array( "status" => "OK", "message" => $this->l['folder_create_success'] ) );
+			} else {
+				$this->jsonResponse( array( "status" => "ERROR", "message" => $this->l['folder_create_error'] ) );
+			}
 		}
 	}
 
@@ -1085,8 +1137,8 @@ IFM_ASSETS
 	   help functions
 	 */
 
-	private function scaleImage($file, $scale_image, $image_width, $image_height) {
-		if ($scale_image) {
+	private function scaleImage($file, $scale_image, $image_width, $image_height, $square = false) {
+		if ($scale_image && preg_match('/^.*\.(jpg|jpeg|png|gif)$/i', $file)) {
 			$image_info = getimagesize($file);
 			if ($image_info[0] > $image_width || $image_info[1] > $image_height) {
 				$image = false;
@@ -1095,7 +1147,7 @@ IFM_ASSETS
 				$ratio = min($ratio_width, $ratio_height);
 				$new_width = (int) $image_info[0] * $ratio;
 				switch ($image_info[2]) {
-                // IMAGETYPE_JPEG / IMG_JPG
+				// IMAGETYPE_JPEG / IMG_JPG
 					case 2:
 						if (imagetypes() & 2) {
 							$image = imagecreatefromjpeg($file);
@@ -1449,6 +1501,10 @@ IFM_ASSETS
 	public function isFilenameValid( $f ) {
 		if( ! $this->isFilenameAllowed( $f ) )
 			return false;
+		if( ! $this->isFileExtentionAllowed( $f ) )
+			return false;
+		if( empty( $f ) )
+			return false;
 		if( strtoupper( substr( PHP_OS, 0, 3 ) ) == "WIN" ) {
 			// windows-specific limitations
 			foreach( array( '\\', '/', ':', '*', '?', '"', '<', '>', '|' ) as $char )
@@ -1476,6 +1532,34 @@ IFM_ASSETS
 			return false;
 		else
 			return true;
+	}
+
+	private function isFileExtentionAllowed( $f ) {
+		$filename = strtolower($f);
+		if (count($this->config['blacklist_file_ext_array']) > 0) {
+			foreach ($this->config['blacklist_file_ext_array'] as $ext) {
+				if ($this->endsWith($filename, $ext)) {
+					return false;
+				}
+			}
+		}
+		if (count($this->config['whitelist_file_ext_array']) > 0) {
+			$result = false;
+			foreach ($this->config['whitelist_file_ext_array'] as $ext) {
+				if ($this->endsWith($filename, $ext)) {
+					$result = true;
+				}
+			}
+			return $result;
+		} else {
+			return true;
+		}
+		return true;
+	}
+
+	function endsWith($haystack, $needle) {
+		$length = strlen($needle);
+		return $length === 0 || (substr($haystack, -$length) === $needle);
 	}
 
 	// sorting function for file and dir arrays
