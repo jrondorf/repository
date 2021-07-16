@@ -760,7 +760,7 @@ IFM_ASSETS
 						$newfilename = $this->pathCombine( realpath($d["dir"]), $dn, $file );
 						if ($overwrite || !file_exists( $newfilename )) {
 							if ($this->xcopy( $file, $dn )) {
-								$this->scaleImage($newfilename, true, $d["width"], $d["height"]);
+								$this->scaleImage($newfilename, true, $d["width"], $d["height"], $square);
 							}
 						}
 					}
@@ -1142,9 +1142,17 @@ IFM_ASSETS
 			$image_info = getimagesize($file);
 			if ($image_info[0] > $image_width || $image_info[1] > $image_height) {
 				$image = false;
+				if ($square && $image_width !== $image_height) {
+					$image_width = min($image_width, $image_height);
+					$image_height = $image_width;
+				}
 				$ratio_width = $image_width / $image_info[0];
 				$ratio_height = $image_height / $image_info[1];
-				$ratio = min($ratio_width, $ratio_height);
+				if ($square) {
+					$ratio = max($ratio_width, $ratio_height);
+				} else {
+					$ratio = min($ratio_width, $ratio_height);
+				}
 				$new_width = (int) $image_info[0] * $ratio;
 				switch ($image_info[2]) {
 				// IMAGETYPE_JPEG / IMG_JPG
@@ -1152,6 +1160,14 @@ IFM_ASSETS
 						if (imagetypes() & 2) {
 							$image = imagecreatefromjpeg($file);
 							$image = imagescale($image, $new_width);
+							if ($square) {
+								$x = imagesx($image);
+								$y = imagesy($image);
+								$size = min($x, $y);
+								$x = ($x / 2) - ($size / 2);
+								$y = ($y / 2) - ($size / 2);
+								$image = imagecrop($image, ['x' => $x, 'y' => $y, 'width' => $size, 'height' => $size]);
+							}
 							imagejpeg($image, $file);
 						}
 						break;
