@@ -1,9 +1,13 @@
 <form id="formCreateArchive">
+<div class="modal-header">
+	<h5 class="modal-title">{{i18n.create_archive}}</h5>
+	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
 <div class="modal-body">
 	<fieldset>
 		<div class="form-group">
 			<label for="archivename">{{i18n.archivename}}:</label>
-			<input id="archivename" class="form-control" type="text" name="archivename" value="" />
+			<input id="archivename" class="form-control" type="text" name="archivename" value="archive.zip" />
 		</div>
 	</fieldset>
 </div>
