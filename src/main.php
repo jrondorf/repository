@@ -615,7 +615,7 @@ IFM_ASSETS
 			exit( 1 );
 		}
 		try {
-			$results = $this->searchItemsRecursive( $d['pattern'] );
+			$results = $this->searchItemsRecursive( $this->caseInsensitivePattern($d['pattern']) );
 			$this->jsonResponse( $results );
 		} catch( Exception $e ) {
 			$this->jsonResponse( array( "status" => "ERROR", "message" => $this->l['error'] . " " . $e->getMessage() ) );
@@ -633,6 +633,28 @@ IFM_ASSETS
 		}
 		return $items;
 	}
+
+	private function caseInsensitivePattern( $pattern ) {
+		$newPattern = '';
+		$pattern = trim($pattern);
+		if (!empty($pattern)) {
+			for( $i = 0; $i < strlen($pattern); $i++) {
+				$char = substr($pattern, $i, 1);
+				if (preg_match("/[^A-Za-z]/", $char) ) {
+					$newPattern = $newPattern . $char;
+				} else {
+					$newPattern = $newPattern . "[{".strtolower($char)."}{".strtoupper($char)."}]";
+				}
+			}
+			if ($newPattern[0] !== "*" && $newPattern[0] !== "?") {
+				$newPattern = '*' . $newPattern;
+			}
+			if ($newPattern[strlen($newPattern)-1] !== "*" && $newPattern[strlen($newPattern)-1] !== "?") {
+				$newPattern = $newPattern . '*';
+			}
+		}
+		return $newPattern;
+	} 
 
 	private function getFolderTree( $d ) {
 		$this->jsonResponse(
