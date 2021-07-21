@@ -302,7 +302,7 @@ function IFM(params) {
 
 		if( self.config.contextmenu && !!( self.config.edit || self.config.extract || self.config.rename || self.config.copymove || self.config.download || self.config.delete ) ) {
 			// create the context menu, this also uses jquery, AFAIK
-			var contextMenu = new BootstrapMenu( '.context-menu', {
+			var contextMenu = new BootstrapMenu( '.ifm-context-menu', {
 				menuEvent: 'click',
 				fetchElementData: function( row ) {
 					var data = {};
@@ -348,8 +348,13 @@ function IFM(params) {
 					copylink: {
 						name: self.i18n.copylink,
 						onClick: function( data ) {
-							if( data.clicked.link.toLowerCase().substr(0,4) == "http" )
-								self.copyToClipboard( data.clicked.link );
+							if( data.clicked.link.toLowerCase().substr(0,4) == "http" ) {
+								if (data.clicked.type === 'dir' && self.config.clipboard_folder_deep_link) {
+									self.copyToClipboard( location.href + '%2F' + data.clicked.name );
+								} else {
+									self.copyToClipboard( data.clicked.link );
+								}
+							}
 							else {
 								var pathname = window.location.pathname.replace( /^\/*/g, '' ).split( '/' );
 								pathname.pop();

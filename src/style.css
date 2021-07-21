@@ -217,3 +217,7 @@ table.dataTable thead th.sorting_desc:after {
     background-color: inherit;
     border-color: #000000;
 }
+
+.ifm-context-menu {
+    cursor: pointer;
+}

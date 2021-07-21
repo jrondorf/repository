@@ -69,6 +69,7 @@ class IFM {
 		"scale_image" => 0,
 		"image_width" => 0,
 		"image_height" => 0,
+		"clipboard_folder_deep_link" => 0,
 
 		// notifications
 		"email_address" => "",
@@ -134,6 +135,7 @@ class IFM {
 		$this->config['scale_image'] =  getenv('IFM_SCALE_IMAGE') !== false ? intval( getenv('IFM_SCALE_IMAGE') ) : $this->config['scale_image'] ;
 		$this->config['image_width'] =  getenv('IFM_IMAGE_WIDTH') !== false ? intval( getenv('IFM_IMAGE_WIDTH') ) : $this->config['image_width'] ;
 		$this->config['image_height'] =  getenv('IFM_IMAGE_HEIGHT') !== false ? intval( getenv('IFM_IMAGE_HEIGHT') ) : $this->config['image_height'] ;
+		$this->config['clipboard_folder_deep_link'] =  getenv('IFM_CLIPBOARD_FOLDER_DEEP_LINK') !== false ? intval( getenv('IFM_CLIPBOARD_FOLDER_DEEP_LINK') ) : $this->config['clipboard_folder_deep_link'] ;
 		$this->config['email_address'] =  getenv('IFM_EMAIL_ADDRESS') !== false ? intval( getenv('IFM_EMAIL_ADDRESS') ) : $this->config['email_address'] ;
 		$this->config['send_email_same_address'] =  getenv('IFM_SEND_EMAIL_SAME_ADDRESS') !== false ? intval( getenv('IFM_SEND_EMAIL_SAME_ADDRESS') ) : $this->config['send_email_same_address'] ;
 		$this->config['send_email_upload'] =  getenv('IFM_SEND_EMAIL_UPLOAD') !== false ? intval( getenv('IFM_SEND_EMAIL_UPLOAD') ) : $this->config['send_email_upload'] ;

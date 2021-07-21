@@ -9,7 +9,7 @@
     require_once('dist/repo.php');
     $defaultconfig = array(
       "root_dir" => realpath('.'),
-      // "root_public_url" => 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . "%id=root_dir%",
+      "root_public_url" => 'http://ifm',
       
       // 	// api controls
       "ajaxrequest" => 0,
@@ -36,6 +36,7 @@
       // "scale_image" => %id=image_scale% && extension_loaded('gd'),
       // "image_width" => %id=image_width%,
       // "image_height" => %id=image_height%
+      "clipboard_folder_deep_link" => 1
   );
     $ifm = new IFM($defaultconfig);
     $ifm->run('inline');
