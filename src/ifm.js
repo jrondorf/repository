@@ -350,7 +350,13 @@ function IFM(params) {
 						onClick: function( data ) {
 							if( data.clicked.link.toLowerCase().substr(0,4) == "http" ) {
 								if (data.clicked.type === 'dir' && self.config.clipboard_folder_deep_link) {
-									self.copyToClipboard( location.href + '%2F' + data.clicked.name );
+									if (location.href.indexOf('#') === -1) {
+										self.copyToClipboard( location.href + '#' + data.clicked.name );
+									} else if (location.href.indexOf('#') === location.href.length -1) {
+										self.copyToClipboard( location.href + data.clicked.name );
+									} else {
+										self.copyToClipboard( location.href + '%2F' + data.clicked.name );
+									}
 								} else {
 									self.copyToClipboard( data.clicked.link );
 								}
