@@ -113,5 +113,27 @@
     "upload": "Envoyer",
     "username": "Nom d'utilisateur",
     "width": "Largeur",
-    "word_wrap": "Revenir à la ligne"
+    "word_wrap": "Revenir à la ligne",
+
+    "decimal": ",",
+    "emptyTable": "Aucune donnée disponible dans le tableau",
+    "info": "Affichage de _START_ à _END_ sur _TOTAL_ éléments",
+    "infoFiltered": "(filtrés depuis un total de _MAX_ éléments)",
+    "infoEmpty": "Affichage de 0 à 0 sur 0 éléments",
+    "thousands": ".",
+    "infoThousands": ".",
+    "lengthMenu": "Afficher _MENU_ éléments",
+    "loadingRecords": "Chargement...",
+    "processing": "Traitement...",
+    "zeroRecords": "Aucun élément correspondant trouvé",
+    "paginate": {
+        "first": "Premier",
+        "last": "Dernier",
+        "previous": "Précédent",
+        "next": "Suiv"
+    },
+    "aria": {
+        "sortAscending": ": activer pour trier la colonne par ordre croissant",
+        "sortDescending": ": activer pour trier la colonne par ordre décroissant"
+    }    
 }

@@ -93,8 +93,8 @@
     "response": "Antwort",
     "save_wo_close": "Speichen ohne schließen",
     "save": "Speichen",
+    "search": "Suche",
     "search_pattern": "Muster",
-    "search": "Suchen",
     "select_destination": "Zielort auswählen",
     "size": "Größe",
     "soft_tabs": "Leichte Tabulatoren",
@@ -113,5 +113,27 @@
     "upload": "Hochladen",
     "username": "Benutzername",
     "width": "Breite",
-    "word_wrap": "Zeilenumbruch"
+    "word_wrap": "Zeilenumbruch",
+
+    "decimal": ",",
+    "emptyTable": "Keine Daten in der Tabelle vorhanden",
+    "info": "_START_ bis _END_ von _TOTAL_ Einträgen",
+    "infoEmpty": "Keine Daten vorhanden",
+    "infoFiltered": "(gefiltert von _MAX_ Einträgen)",
+    "thousands": ".",
+    "infoThousands": ".",
+    "lengthMenu": "_MENU_ Zeilen anzeigen",
+    "loadingRecords": "Wird geladen...",
+    "processing": "Bitte warten...",
+    "zeroRecords": "Keine passenden Einträge gefunden",
+    "paginate": {
+        "first": "Erste",
+        "previous": "Zurück",
+        "next": "Nächste",
+        "last": "Letzte"
+    },
+    "aria": {
+        "sortAscending": ": aktivieren, um Spalte aufsteigend zu sortieren",
+        "sortDescending": ": aktivieren, um Spalte absteigend zu sortieren"
+    }
 }

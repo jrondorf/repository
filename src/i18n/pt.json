@@ -113,5 +113,27 @@
     "upload": "Enviar",
     "username": "Nome de usuário",
     "width": "Largura",
-    "word_wrap": "Quebra de Linha"
+    "word_wrap": "Quebra de Linha",
+
+    "decimal": ",",
+    "emptyTable": "Não foi encontrado nenhum registo",
+    "info": "Mostrando os registos _START_ a _END_ num total de _TOTAL_",
+    "infoEmpty": "Mostrando 0 os registos num total de 0",
+    "infoFiltered": "(filtrado num total de _MAX_ registos)",
+    "thousands": ".",
+    "infoThousands": ".",
+    "lengthMenu": "Mostrar _MENU_ registos",
+    "loadingRecords": "A carregar...",
+    "processing": "A processar...",
+    "zeroRecords": "Não foram encontrados resultados",
+    "paginate": {
+        "first": "Primeiro",
+        "previous": "Anterior",
+        "next": "Seguinte",
+        "last": "Último"
+    },
+    "aria": {
+        "sortAscending": ": Ordenar colunas de forma ascendente",
+        "sortDescending": ": Ordenar colunas de forma descendente"
+    }
 }

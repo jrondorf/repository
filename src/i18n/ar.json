@@ -113,5 +113,27 @@
     "upload": "رفع",
     "username": "اسم المستخدم",
     "width": "عرض",
-    "word_wrap": "التفاف النص"
+    "word_wrap": "التفاف النص",
+
+    "decimal": "",
+    "emptyTable": "ليست هناك بيانات متاحة في الجدول",
+    "info": "إظهار _START_ إلى _END_ من أصل _TOTAL_ مدخل",
+    "infoEmpty": "يعرض 0 إلى 0 من أصل 0 سجل",
+    "infoFiltered": "(منتقاة من مجموع _MAX_ مُدخل)",
+    "thousands": ",",
+    "infoThousands": ",",
+    "lengthMenu": "أظهر _MENU_ مدخلات",
+    "loadingRecords": "جارٍ التحميل...",
+    "processing": "جارٍ التحميل...",
+    "zeroRecords": "لم يعثر على أية سجلات",
+    "paginate": {
+        "first": "الأول",
+        "previous": "السابق",
+        "next": "التالي",
+        "last": "الأخير"
+    },
+    "aria": {
+        "sortAscending": ": تفعيل لترتيب العمود تصاعدياً",
+        "sortDescending": ": تفعيل لترتيب العمود تنازلياً"
+    }
 }

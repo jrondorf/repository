@@ -10,12 +10,17 @@
     $defaultconfig = array(
       "root_dir" => realpath('.'),
       "root_public_url" => 'http://ifm',
+      "language" => 'de',
       
       // 	// api controls
       "ajaxrequest" => 0,
       "chmod" => 0,
       "search" => 1,
       "pagination" => 1,
+      "zipnload" => 0,
+      "createarchive" => 0,
+      "container" => "container",
+      "language" => "en",
       
       // 	// gui controls
       // "showlastmodified" => %id=showlastmodified%,

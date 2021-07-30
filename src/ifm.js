@@ -173,7 +173,9 @@ function IFM(params) {
 			item.download.link = self.api+"?api="+item.download.action+"&dir="+self.hrefEncode(self.currentDir)+"&filename="+self.hrefEncode(item.download.name);
 			if( self.config.isDocroot && !self.config.forceproxy )
 				item.link = self.hrefEncode( self.pathCombine( window.location.path, self.currentDir, item.name ) );
-			else if (self.config.download && self.config.zipnload) {
+			// else if (self.config.download && self.config.zipnload) {
+			// self.config.download is always true. link should always be visible, no link just with a # in href
+			else if (self.config.download) {
 				if (self.config.root_public_url) {
 					if (self.config.root_public_url.charAt(0) == "/")
 						item.link = self.pathCombine(window.location.origin, self.config.root_public_url, self.hrefEncode(self.currentDir), self.hrefEncode(item.name) );
@@ -227,9 +229,7 @@ function IFM(params) {
 				{ "orderable": false, "targets": ["th-download","th-permissions","th-buttons"] }
 			],
 			orderFixed: [0, 'desc'],
-			language: {
-				"search": self.i18n.filter
-			},
+			language: self.i18n,
 			stateSave: true
 		});
 
@@ -360,8 +360,7 @@ function IFM(params) {
 								} else {
 									self.copyToClipboard( data.clicked.link );
 								}
-							}
-							else {
+							} else {
 								var pathname = window.location.pathname.replace( /^\/*/g, '' ).split( '/' );
 								pathname.pop();
 								var link = self.pathCombine( window.location.origin, data.clicked.link )
@@ -403,7 +402,13 @@ function IFM(params) {
 								window.location = data.clicked.download.link;
 						},
 						iconClass: "ifm-icon ifm-icon-download",
-						isShown: function() { return !!self.config.download; }
+						isShown: function( data ) {
+							if (data.clicked.type === 'dir') {
+								return !!(self.config.download && self.config.zipnload);
+							} else {
+								return !!self.config.download;
+							}
+						}
 					},
 					createarchive: {
 						name: function( data ) {
