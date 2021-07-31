@@ -21,6 +21,8 @@
       "createarchive" => 0,
       "container" => "container",
       "language" => "en",
+      "script_path" => realpath(__FILE__),
+      "asset_path" => realpath('test'),
       
       // 	// gui controls
       // "showlastmodified" => %id=showlastmodified%,

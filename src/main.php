@@ -1,7 +1,7 @@
 <?php
 
 //////////////////////////////////////////////////
-// Repo Version 1.1.0
+// Repo Version 2.1.1
 //////////////////////////////////////////////////
 
 /* =======================================================================
@@ -71,14 +71,15 @@ class IFM {
 		"image_height" => 0,
 		"clipboard_folder_deep_link" => 0,
 
-		// notifications
+		// additional settings
 		"email_address" => "",
 		"send_email_same_address" => 0,
 		"send_email_upload" => 0,
 		"email_subject_upload" => "",
-
 		"blacklist_file_ext_array" => array(),
-		"whitelist_file_ext_array" => array()
+		"whitelist_file_ext_array" => array(),
+		"script_path" => "",
+		"asset_path" => ""
 	);
 
 	private $config = array();
@@ -92,6 +93,7 @@ class IFM {
 		$this->config = $this->defaultconfig;
 
 		// load config from environment variables
+		/*
 		$this->config['auth'] =  getenv('IFM_AUTH') !== false ? intval( getenv('IFM_AUTH') ) : $this->config['auth'] ;
 		$this->config['auth_source'] =  getenv('IFM_AUTH_SOURCE') !== false ? getenv('IFM_AUTH_SOURCE') : $this->config['auth_source'] ;
 		$this->config['root_dir'] =  getenv('IFM_ROOT_DIR') !== false ? getenv('IFM_ROOT_DIR') : $this->config['root_dir'] ;
@@ -106,7 +108,6 @@ class IFM {
 		$this->config['chmod'] =  getenv('IFM_API_CHMOD') !== false ? intval( getenv('IFM_API_CHMOD') ) : $this->config['chmod'] ;
 		$this->config['copymove'] =  getenv('IFM_API_COPYMOVE') !== false ? intval( getenv('IFM_API_COPYMOVE') ) : $this->config['copymove'] ;
 		$this->config['createdir'] =  getenv('IFM_API_CREATEDIR') !== false ? intval( getenv('IFM_API_CREATEDIR') ) : $this->config['createdir'] ;
-		$this->config['createdirthumbs'] =  getenv('IFM_API_CREATEDIRTHUMBS') !== false ? intval( getenv('IFM_API_CREATEDIRTHUMBS') ) : $this->config['createdirthumbs'] ;
 		$this->config['createfile'] =  getenv('IFM_API_CREATEFILE') !== false ? intval( getenv('IFM_API_CREATEFILE') ) : $this->config['createfile'] ;
 		$this->config['edit'] =  getenv('IFM_API_EDIT') !== false ? intval( getenv('IFM_API_EDIT') ) : $this->config['edit'] ;
 		$this->config['delete'] =  getenv('IFM_API_DELETE') !== false ? intval( getenv('IFM_API_DELETE') ) : $this->config['delete'] ;
@@ -122,7 +123,6 @@ class IFM {
 		$this->config['showowner'] =  getenv('IFM_GUI_SHOWOWNER') !== false ? intval( getenv('IFM_GUI_SHOWOWNER') ) : $this->config['showowner'] ;
 		$this->config['showgroup'] =  getenv('IFM_GUI_SHOWGROUP') !== false ? intval( getenv('IFM_GUI_SHOWGROUP') ) : $this->config['showgroup'] ;
 		$this->config['showpermissions'] =  getenv('IFM_GUI_SHOWPERMISSIONS') !== false ? intval( getenv('IFM_GUI_SHOWPERMISSIONS') ) : $this->config['showpermissions'] ;
-		$this->config['showdimensions'] =  getenv('IFM_GUI_SHOWDIMENSIONS') !== false ? intval( getenv('IFM_GUI_SHOWDIMENSIONS') ) : $this->config['showdimensions'] ;
 		$this->config['showhtdocs'] =  getenv('IFM_GUI_SHOWHTDOCS') !== false ? intval( getenv('IFM_GUI_SHOWHTDOCS') ) : $this->config['showhtdocs'] ;
 		$this->config['showhiddenfiles'] =  getenv('IFM_GUI_SHOWHIDDENFILES') !== false ? intval( getenv('IFM_GUI_SHOWHIDDENFILES') ) : $this->config['showhiddenfiles'] ;
 		$this->config['showpath'] =  getenv('IFM_GUI_SHOWPATH') !== false ? intval( getenv('IFM_GUI_SHOWPATH') ) : $this->config['showpath'] ;
@@ -131,23 +131,13 @@ class IFM {
 		$this->config['showrefresh'] =  getenv('IFM_GUI_REFRESH') !== false ? intval( getenv('IFM_GUI_REFRESH') ) : $this->config['showrefresh'] ;
 		$this->config['forceproxy'] =  getenv('IFM_GUI_FORCEPROXY') !== false ? intval( getenv('IFM_GUI_FORCEPROXY') ) : $this->config['forceproxy'] ;
 		$this->config['confirmoverwrite'] =  getenv('IFM_GUI_CONFIRMOVERWRITE') !== false ? intval( getenv('IFM_GUI_CONFIRMOVERWRITE') ) : $this->config['confirmoverwrite'] ;
-		$this->config['container'] =  getenv('IFM_CONTAINER') !== false ? intval( getenv('IFM_CONTAINER') ) : $this->config['container'] ;
-		$this->config['scale_image'] =  getenv('IFM_SCALE_IMAGE') !== false ? intval( getenv('IFM_SCALE_IMAGE') ) : $this->config['scale_image'] ;
-		$this->config['image_width'] =  getenv('IFM_IMAGE_WIDTH') !== false ? intval( getenv('IFM_IMAGE_WIDTH') ) : $this->config['image_width'] ;
-		$this->config['image_height'] =  getenv('IFM_IMAGE_HEIGHT') !== false ? intval( getenv('IFM_IMAGE_HEIGHT') ) : $this->config['image_height'] ;
-		$this->config['clipboard_folder_deep_link'] =  getenv('IFM_CLIPBOARD_FOLDER_DEEP_LINK') !== false ? intval( getenv('IFM_CLIPBOARD_FOLDER_DEEP_LINK') ) : $this->config['clipboard_folder_deep_link'] ;
-		$this->config['email_address'] =  getenv('IFM_EMAIL_ADDRESS') !== false ? intval( getenv('IFM_EMAIL_ADDRESS') ) : $this->config['email_address'] ;
-		$this->config['send_email_same_address'] =  getenv('IFM_SEND_EMAIL_SAME_ADDRESS') !== false ? intval( getenv('IFM_SEND_EMAIL_SAME_ADDRESS') ) : $this->config['send_email_same_address'] ;
-		$this->config['send_email_upload'] =  getenv('IFM_SEND_EMAIL_UPLOAD') !== false ? intval( getenv('IFM_SEND_EMAIL_UPLOAD') ) : $this->config['send_email_upload'] ;
-		$this->config['email_subject_upload'] =  getenv('IFM_EMAIL_SUBJECT_UPLOAD') !== false ? intval( getenv('IFM_EMAIL_SUBJECT_UPLOAD') ) : $this->config['email_subject_upload'] ;
-		$this->config['blacklist_file_ext_array'] =  getenv('IFM_BLACKLIST_FILE_EXT_ARRAY') !== false ? str_split( getenv('IFM_BLACKLIST_FILE_EXT_ARRAY') ) : $this->config['blacklist_file_ext_array'] ;
-		$this->config['whitelist_file_ext_array'] =  getenv('IFM_WHITELIST_FILE_EXT_ARRAY') !== false ? str_split( getenv('IFM_WHITELIST_FILE_EXT_ARRAY') ) : $this->config['whitelist_file_ext_array'] ;
 
 		// optional settings
 		if( getenv('IFM_SESSION_LIFETIME') !== false )
 			$this->config['session_lifetime'] = getenv('IFM_SESSION_LIFETIME');
 		if( getenv('IFM_FORCE_SESSION_LIFETIME') !== false )
 			$this->config['session_lifetime'] = getenv('IFM_FORCE_SESSION_LIFETIME');
+		*/
 
 		// load config from passed array
 		$this->config = array_merge( $this->config, $config );
@@ -479,8 +469,10 @@ IFM_ASSETS
 		unset( $files ); unset( $dirs ); $files = array(); $dirs = array();
 
 		if( $handle = opendir( "." ) ) {
-			while( false !== ( $result = readdir( $handle ) ) ) {
+			while( false !== ( $result = readdir( $handle ) ) ) {				
+				$result_realpath = realpath($result);
 				if( $result == basename( $_SERVER['SCRIPT_NAME'] ) && $this->getScriptRoot() == getcwd() ) { }
+				elseif( $result_realpath == $this->config['script_path'] || $result_realpath == $this->config['asset_path'] ) { }
 				elseif( ( $result == ".htaccess" || $result==".htpasswd" ) && $this->config['showhtdocs'] != 1 ) {}
 				elseif( $result == "." ) {}
 				elseif( $result != ".." && substr( $result, 0, 1 ) == "." && $this->config['showhiddenfiles'] != 1 ) {}
@@ -571,7 +563,7 @@ IFM_ASSETS
 		$ret['inline'] = ( $this->mode == "inline" ) ? true : false;
 		$ret['isDocroot'] = ($this->getRootDir() == $this->getScriptRoot());
 
-		foreach (array("auth_source", "root_dir") as $field) {
+		foreach (array("auth_source", "root_dir", "script_path", "asset_path", "email_address") as $field) {
 			unset($ret[$field]);
 		}
 		$this->jsonResponse($ret);

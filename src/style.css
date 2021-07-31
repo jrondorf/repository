@@ -193,7 +193,7 @@ table.dataTable thead th.sorting_desc:after {
 	overflow: auto;
 }
 
-
+/*
 @media (min-width: 576px) {
 	.modal-dialog {
 		max-width: 600px;
@@ -206,6 +206,7 @@ table.dataTable thead th.sorting_desc:after {
 		max-width: 800px;
 	}
 }
+*/
 
 #ifm a {
     color: inherit;

@@ -39,7 +39,10 @@ function IFM(params) {
 		var modalDialog = document.createElement( 'div' );
 		modalDialog.classList.add( 'modal-dialog' );
 		modalDialog.attributes.role = 'document';
-		if( options.large == true ) modalDialog.classList.add( 'modal-lg' );
+		if( options.large == true ) {
+			modalDialog.classList.add( 'modal-lg' );
+			modalDialog.classList.add( 'modal-xl' );
+		}
 		var modalContent = document.createElement('div');
 		modalContent.classList.add( 'modal-content' );
 		modalContent.innerHTML = content;
@@ -765,7 +768,7 @@ function IFM(params) {
 	 * Shows the delete dialog
 	 */
 	this.showDeleteDialog = function( items ) {
-		self.showModal(	Mustache.render( self.templates.deletefile, {
+		self.showModal( Mustache.render( self.templates.deletefile, {
 			multiple: ( items.length > 1 ),
 			count: items.length,
 			filename: ( Array.isArray( items ) ? items[0].name : items.name ),
@@ -1065,7 +1068,7 @@ function IFM(params) {
 	};
 
 	this.showUploadConfirmOverwrite = function(files, existing_files, newfilename=undefined) {
-		self.showModal(Mustache.render(self.templates.uploadconfirmoverwrite, {files: existing_files, i18n: self.i18n}));
+		self.showModal( Mustache.render(self.templates.uploadconfirmoverwrite, {files: existing_files, i18n: self.i18n}));
 		var form = document.forms.formUploadConfirmOverwrite;
 		form.addEventListener('click', function(e) {
 			if (e.target.id == "buttonConfirm") {
