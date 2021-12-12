@@ -24,7 +24,7 @@
 		<input class="form-control" type="number" min="1" max="9" maxlength="1" id="editor-tabsize" title="{{i18n.tab_size}}" value="{{tabsize}}" aria-describedby="editor-tabsize-label">
 	</div>
 	{{#ace_includes}}
-	<select class="form-control selectpicker" data-toggle="dropdown" data-live-search="true" data-size="15" id="editor-syntax">
+	<select class="form-select" data-toggle="dropdown" data-live-search="true" data-size="15" id="editor-syntax">
 		{{#modes}}
 		<option value="ace/mode/{{.}}" {{{ace_mode_selected}}}>{{.}}</option>
 		{{/modes}}
