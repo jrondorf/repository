@@ -48,6 +48,11 @@
 					<a id="createDirThumbs" class="nav-link"><span title="{{i18n.thumbs_folder_new}}" class="ifm-icon ifm-icon-file-image" href="#"></span> <span class="d-inline d-lg-none">{{i18n.thumbs_folder_new}}</span></a>
 				</li>
 				{{/config.createdirthumbs}}
+				{{#config.copylinks}}
+				<li class="nav-item">
+					<a id="copyLinks" class="nav-link"><span title="{{i18n.copylink}}" class="ifm-icon ifm-icon-link-ext" href="#"></span> <span class="d-inline d-lg-none">{{i18n.copylink}}</span></a>
+				</li>
+				{{/config.copylinks}}
 				{{#config.remoteupload}}
 				<li class="nav-item">
 					<a class="nav-link" href="#" id="buttonRemoteUpload"><span class="ifm-icon ifm-icon-upload-cloud"></span> <span class="d-inline d-lg-none">{{i18n.upload_remote}}</span></a>
@@ -84,13 +89,13 @@
 					<th class="th-lastmod">{{i18n.last_modified}}</th>
 					{{/config.showlastmodified}}
 					{{#config.showfilesize}}
-					<th class="th-size">{{i18n.size}}</th>
+					<th class="th-size d-none d-md-table-cell">{{i18n.size}}</th>
 					{{/config.showfilesize}}
 					{{#config.showdimensions}}
 					<th class="th-dimensions d-none d-md-table-cell">{{i18n.dimensions}}</th>
 					{{/config.showdimensions}}
 					{{#config.showpermissions}}
-					<th class="th-permissions d-none d-md-table-cell">{{i18n.permissions}}</th>
+					<th class="th-permissions d-none d-lg-table-cell">{{i18n.permissions}}</th>
 					{{/config.showpermissions}}
 					{{#config.showowner}}
 					<th class="th-owner d-none d-lg-table-cell">{{i18n.owner}}</th>
@@ -98,7 +103,7 @@
 					{{#config.showgroup}}
 					<th class="th-group d-none d-xl-table-cell">{{i18n.group}}</th>
 					{{/config.showgroup}}
-					<th class="th-buttons buttons"></th>
+					<th class="th-buttons buttons d-none d-md-table-cell"></th>
 				</tr>
 			</thead>
 			<tbody>

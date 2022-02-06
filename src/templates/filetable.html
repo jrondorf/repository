@@ -21,13 +21,13 @@
 	<td data-order="{{lastmodified}}">{{lastmodified_hr}}</td>
 	{{/config.showlastmodified}}
 	{{#config.showfilesize}}
-	<td data-order="{{size_raw}}">{{size}}</td>
+	<td class="d-none d-md-table-cell" data-order="{{size_raw}}">{{size}}</td>
 	{{/config.showfilesize}}
 	{{#config.showdimensions}}
 	<td class="d-none d-md-table-cell">{{dimensions}}</td>
 	{{/config.showdimensions}}
 	{{#config.showpermissions}}
-	<td class="d-none d-md-table-cell">
+	<td class="d-none d-lg-table-cell">
 		<input type="text" size="11" name="newpermissions" class="form-control {{filepermmode}}" value="{{fileperms}}" data-filename="{{name}}" {{readonly}}>
 	</td>
 	{{/config.showpermissions}}
@@ -41,7 +41,7 @@
 		{{group}}
 	</td>
 	{{/config.showgroup}}
-	<td>
+	<td class="d-none d-md-table-cell">
 		{{#button}}
 		<a tabindex="0" name="do-{{action}}" data-id="{{guid}}">
 			<span class="{{icon}}" title="{{title}}"</span>

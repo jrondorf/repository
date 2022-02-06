@@ -149,7 +149,7 @@ function IFM(params) {
 					item.button.push({
 						action: "extract",
 						icon: "ifm-icon ifm-icon-archive",
-						title: "extract"
+						title: self.i18n.extract
 					});
 				} else if(
 					self.config.edit &&
@@ -169,7 +169,7 @@ function IFM(params) {
 					item.button.push({
 						action: "edit",
 						icon: "ifm-icon ifm-icon-pencil",
-						title: "edit"
+						title: self.i18n.edit
 					});
 				}
 			}
@@ -194,19 +194,19 @@ function IFM(params) {
 					item.button.push({
 						action: "copymove",
 						icon: "ifm-icon ifm-icon-folder-open-empty",
-						title: "copy/move"
+						title: self.i18n.copy+'/'+self.i18n.move
 					});
 				if( self.config.rename )
 					item.button.push({
 						action: "rename",
 						icon: "ifm-icon ifm-icon-terminal",
-						title: "rename"
+						title: self.i18n.rename
 					});
 				if( self.config.delete )
 					item.button.push({
 						action: "delete",
 						icon: "ifm-icon ifm-icon-trash",
-						title: "delete"
+						title: self.i18n.delete
 					});
 			}
 		});
@@ -366,7 +366,7 @@ function IFM(params) {
 							} else {
 								var pathname = window.location.pathname.replace( /^\/*/g, '' ).split( '/' );
 								pathname.pop();
-								var link = self.pathCombine( window.location.origin, data.clicked.link )
+								var link = self.pathCombine( window.location.origin, data.clicked.link );
 								if( pathname.length > 0 )
 									link = self.pathCombine( window.location.origin, pathname.join( '/' ), data.clicked.link )
 								self.copyToClipboard( link );
@@ -707,6 +707,36 @@ function IFM(params) {
 			}
 		}, false );
 	};
+
+
+	/**
+	 * Shows the copy links dialog
+	 */
+	 this.showCopyLinksDialog = function() {
+		self.showModal( Mustache.render( self.templates.copylinks, { i18n: self.i18n } ), { large: true } );
+		var form = document.forms.formCopyLinks;
+		var links = [];
+		var pathname = window.location.pathname.replace( /^\/*/g, '' ).split( '/' );
+		pathname.pop();
+		self.fileCache.forEach(function(value, index){
+			if (value.type === 'file') {
+				// var link = self.pathCombine( window.location.origin, value.link );
+				// if( pathname.length > 0 ) {
+				// 	link = self.pathCombine( window.location.origin, pathname.join( '/' ), value.link )
+				// }
+				links.push(encodeURI(value.link));
+			}
+		});
+		form.elements.content.value = links.join('\n');
+		form.elements.content.rows = links.length + 1;
+		form.addEventListener( 'click', function( e ) {
+			if( e.target.id == 'buttonCancel' ) {
+				e.preventDefault();
+				self.hideModal();
+			}
+		}, false );
+	};
+
 
 	/**
 	 * Create a directory
@@ -1480,6 +1510,7 @@ function IFM(params) {
 
 	// copypasted from https://hackernoon.com/copying-text-to-clipboard-with-javascript-df4d4988697f
 	this.copyToClipboard = function( str ) {
+		str = encodeURI(str);
 		const el = document.createElement('textarea');
 		el.value = str;
 		el.setAttribute('readonly', '');
@@ -1979,6 +2010,8 @@ function IFM(params) {
 			document.getElementById( 'createDir' ).onclick = function() { self.showCreateDirDialog(); };
 		if( self.config.createdirthumbs )
 			document.getElementById( 'createDirThumbs' ).onclick = function() { self.showCreateDirThumbsDialog(); };
+		if( self.config.copylinks )
+			document.getElementById( 'copyLinks' ).onclick = function() { self.showCopyLinksDialog(); };
 		if( self.config.upload )
 			document.getElementById( 'upload' ).onclick = function() { self.showUploadFileDialog(); };
 		document.getElementById( 'currentDir' ).onkeypress = function( e ) {

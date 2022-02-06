@@ -70,6 +70,9 @@ class IFM {
 		"image_width" => 0,
 		"image_height" => 0,
 		"clipboard_folder_deep_link" => 0,
+		"wordwrap" => 0,
+		"textfiles_editor" => 0,
+		"copylinks" => 1,
 
 		// additional settings
 		"email_address" => "",
@@ -80,6 +83,7 @@ class IFM {
 		"whitelist_file_ext_array" => array(),
 		"script_path" => "",
 		"asset_path" => ""
+
 	);
 
 	private $config = array();
@@ -175,6 +179,9 @@ f00bar;
 f00bar;
 	$templates['createdirthumbs'] = <<<'f00bar'
 @@@file:src/templates/modal.createdirthumbs.html@@@
+f00bar;
+	$templates['copylinks'] = <<<'f00bar'
+@@@file:src/templates/modal.copylinks.html@@@
 f00bar;
 		$templates['createarchive'] = <<<'f00bar'
 @@@file:src/templates/modal.createarchive.html@@@
@@ -744,7 +751,7 @@ IFM_ASSETS
 		$dn = $this->sanitizeFilename( $dn );
 		if( $dn == "" )
 			$this->jsonResponse( array( "status" => "ERROR", "message" => $this->l['invalid_dir'] ) );
-		elseif( ! $this->isFilenameValid( $dn ) )
+		elseif( ! $this->isFilenameValid( $dn, true ) )
 			$this->jsonResponse( array( "status" => "ERROR", "message" => $this->l['invalid_dir'] ) );
 		else {
 			if( @mkdir( $dn ) )
@@ -764,7 +771,7 @@ IFM_ASSETS
 		$dn = $this->sanitizeFilename($d['dirname']);
 		if( $dn == "" )
 			$this->jsonResponse( array( "status" => "ERROR", "message" => $this->l['invalid_dir'] ) );
-		elseif( ! $this->isFilenameValid( $dn ) )
+		elseif( ! $this->isFilenameValid( $dn, true ) )
 			$this->jsonResponse( array( "status" => "ERROR", "message" => $this->l['invalid_dir'] ) );
 		else {
 			if ( ( file_exists( $dn ) && is_dir( $dn ) ) || @mkdir( $dn ) ) {
@@ -1530,11 +1537,13 @@ IFM_ASSETS
 	}
 
 	// check if filename is allowed
-	public function isFilenameValid( $f ) {
+	public function isFilenameValid( $f, $isDir = false ) {
 		if( ! $this->isFilenameAllowed( $f ) )
 			return false;
-		if( ! $this->isFileExtentionAllowed( $f ) )
+		if( ! $isDir ) {
+			if( ! $this->isFileExtentionAllowed( $f ) )
 			return false;
+		}
 		if( empty( $f ) )
 			return false;
 		if( strtoupper( substr( PHP_OS, 0, 3 ) ) == "WIN" ) {

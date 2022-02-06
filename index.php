@@ -25,8 +25,8 @@
       "asset_path" => realpath('test'),
       
       // 	// gui controls
-      // "showlastmodified" => %id=showlastmodified%,
-      // "showfilesize" => %id=showfilesize%,
+      // "showlastmodified" => 1,
+      // "whitelist_file_ext_array" => ['jpg'],
       // "showdimensions" => %id=showdimensions%,
       // "showowner" => %id=showowner%,
       // "showgroup" => %id=showgroup%,
