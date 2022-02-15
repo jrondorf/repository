@@ -1,7 +1,7 @@
 <?php
 
 //////////////////////////////////////////////////
-// Repo Version 2.1.3
+// Repo Version 2.2.0
 //////////////////////////////////////////////////
 
 /* =======================================================================
@@ -70,8 +70,6 @@ class IFM {
 		"image_width" => 0,
 		"image_height" => 0,
 		"clipboard_folder_deep_link" => 0,
-		"wordwrap" => 0,
-		"textfiles_editor" => 0,
 		"copylinks" => 1,
 
 		// additional settings
@@ -1475,7 +1473,7 @@ IFM_ASSETS
 			case "avi": case "flv": case "mp4": case "mpg": case "mkv": case "mpeg": case "webm": case "wmv": case "mov": return 'ifm-icon ifm-icon-file-video'; break;
 			case "c": case "cpp": case "css": case "dat": case "h": case "html": case "java": case "js": case "php": case "py": case "sql": case "xml": case "yml": case "json": return 'ifm-icon ifm-icon-file-code'; break;
 			case "doc": case "docx": case "odf": case "odt": case "rtf": return 'ifm-icon ifm-icon-file-word'; break;
-			case "txt": case "log": return 'ifm-icon ifm-icon-doc-text'; break;
+			case "txt": case "log": case "md": case "csv": return 'ifm-icon ifm-icon-doc-text'; break;
 			case "ods": case "xls": case "xlsx": return 'ifm-icon ifm-icon-file-excel'; break;
 			case "odp": case "ppt": case "pptx": return 'ifm-icon ifm-icon-file-powerpoint'; break;
 			case "pdf": return 'ifm-icon ifm-icon-file-pdf'; break;

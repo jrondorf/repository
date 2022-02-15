@@ -257,6 +257,11 @@ function IFM(params) {
 					baguetteBox.show(0, baguetteBox.run('#'+ifmitem.id, {
 						animation: false
 					})[0]);
+				} else if (self.config.edit && (ifmitem.children[0].className.includes('ifm-icon-file-code') || ifmitem.children[0].className.includes('ifm-icon-doc-text'))) {
+					e.stopPropagation();
+					e.preventDefault();
+					var item = self.fileCache.find( function( x ) { if( x.guid === e.target.id ) return x; } );
+					self.editFile( item.name );
 				}
 			} else if( e.target.parentElement.name == 'start_download' ) {
 				e.stopPropagation();
@@ -562,6 +567,8 @@ function IFM(params) {
 		self.editor = ace.edit("content");
 		self.editor.$blockScrolling = 'Infinity';
 		self.editor.getSession().setValue(content);
+		// wordwrap
+		self.editor.getSession().setOption('wrap', true);
 		self.editor.focus();
 		self.editor.on("change", function() { self.fileChanged = true; });
 		if( self.ace && self.inArray( "ext-modelist", self.ace.files ) ) {
