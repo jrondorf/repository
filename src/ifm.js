@@ -1547,7 +1547,7 @@ function IFM(params) {
 			self.log( "Error: No task id given.");
 			return false;
 		}
-		if( ! document.querySelector( "footer" ) ) {
+		if( ! document.querySelector( "#ifmfooter" ) ) {
 			var newFooter = self.getNodeFromString( Mustache.render( self.templates.footer, { i18n: self.i18n } ) );
 			newFooter.addEventListener( 'click', function( e ) {
 				if( e.target.name == 'showAll' || e.target.parentElement.name == "showAll" ) {

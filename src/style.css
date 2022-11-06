@@ -90,7 +90,7 @@ div.ifminfo div.panel div.panel-body { padding: 0px !important; text-align:  cen
 /*
  * Footer / Task-Queue settings
  */
-footer {
+#ifmfooter {
 	position: fixed;
 	padding-top: 1em;
 	border-top: 1px;
