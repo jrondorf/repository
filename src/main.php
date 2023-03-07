@@ -1159,7 +1159,7 @@ IFM_ASSETS
 	 */
 
 	private function scaleImage($file, $scale_image, $image_width, $image_height, $square = false) {
-		if ($scale_image && preg_match('/^.*\.(jpg|jpeg|png|gif)$/i', $file)) {
+		if ($scale_image && preg_match('/^.*\.(jpg|jpeg|png|gif|webp)$/i', $file)) {
 			$image_info = getimagesize($file);
 			if ($image_info[0] > $image_width || $image_info[1] > $image_height) {
 				$image = false;
@@ -1175,10 +1175,25 @@ IFM_ASSETS
 					$ratio = min($ratio_width, $ratio_height);
 				}
 				$new_width = (int) $image_info[0] * $ratio;
-				switch ($image_info[2]) {
+				switch (exif_imagetype($file)) {
 				// IMAGETYPE_JPEG / IMG_JPG
-					case 2:
-						if (imagetypes() & 2) {
+					case IMAGETYPE_GIF:
+						if (imagetypes() & IMAGETYPE_GIF) {
+							$image = imagecreatefromgif($file);
+							$image = imagescale($image, $new_width);
+							if ($square) {
+								$x = imagesx($image);
+								$y = imagesy($image);
+								$size = min($x, $y);
+								$x = ($x / 2) - ($size / 2);
+								$y = ($y / 2) - ($size / 2);
+								$image = imagecrop($image, ['x' => $x, 'y' => $y, 'width' => $size, 'height' => $size]);
+							}
+							imagegif($image, $file);
+						}
+						break;
+					case IMAGETYPE_JPEG:
+						if (imagetypes() & IMAGETYPE_JPEG) {
 							$image = imagecreatefromjpeg($file);
 							$image = imagescale($image, $new_width);
 							if ($square) {
@@ -1190,6 +1205,36 @@ IFM_ASSETS
 								$image = imagecrop($image, ['x' => $x, 'y' => $y, 'width' => $size, 'height' => $size]);
 							}
 							imagejpeg($image, $file);
+						}
+						break;
+					case IMAGETYPE_PNG:
+						if (imagetypes() & IMAGETYPE_PNG) {
+							$image = imagecreatefrompng($file);
+							$image = imagescale($image, $new_width);
+							if ($square) {
+								$x = imagesx($image);
+								$y = imagesy($image);
+								$size = min($x, $y);
+								$x = ($x / 2) - ($size / 2);
+								$y = ($y / 2) - ($size / 2);
+								$image = imagecrop($image, ['x' => $x, 'y' => $y, 'width' => $size, 'height' => $size]);
+							}
+							imagepng($image, $file);
+						}
+						break;
+					case IMAGETYPE_WEBP:
+						if (imagetypes() & IMAGETYPE_WEBP) {
+							$image = imagecreatefromwebp($file);
+							$image = imagescale($image, $new_width);
+							if ($square) {
+								$x = imagesx($image);
+								$y = imagesy($image);
+								$size = min($x, $y);
+								$x = ($x / 2) - ($size / 2);
+								$y = ($y / 2) - ($size / 2);
+								$image = imagecrop($image, ['x' => $x, 'y' => $y, 'width' => $size, 'height' => $size]);
+							}
+							imagewebp($image, $file);
 						}
 						break;
 					default:
@@ -1469,7 +1514,7 @@ IFM_ASSETS
 		$type = strtolower($type);
 		switch( $type ) {
 			case "aac": case "aiff": case "mid": case "mp3": case "wav": return 'ifm-icon ifm-icon-file-audio'; break;
-			case "ai": case "bmp": case "eps": case "tiff": case "gif": case "jpg": case "jpeg": case "png": case "psd": case "svg": return 'ifm-icon ifm-icon-file-image'; break;
+			case "ai": case "bmp": case "eps": case "tiff": case "gif": case "jpg": case "jpeg": case "png": case "psd": case "svg": case "webp": return 'ifm-icon ifm-icon-file-image'; break;
 			case "avi": case "flv": case "mp4": case "mpg": case "mkv": case "mpeg": case "webm": case "wmv": case "mov": return 'ifm-icon ifm-icon-file-video'; break;
 			case "c": case "cpp": case "css": case "dat": case "h": case "html": case "java": case "js": case "php": case "py": case "sql": case "xml": case "yml": case "json": return 'ifm-icon ifm-icon-file-code'; break;
 			case "doc": case "docx": case "odf": case "odt": case "rtf": return 'ifm-icon ifm-icon-file-word'; break;
