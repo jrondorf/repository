@@ -1,7 +1,7 @@
 <?php
 
 //////////////////////////////////////////////////
-// Repo Version 2.3.0
+// Repo Version 2.4.0
 //////////////////////////////////////////////////
 
 /* =======================================================================
@@ -513,6 +513,7 @@ IFM_ASSETS
 			else
 				$type = substr( strrchr( $name, "." ), 1 );
 			$item["icon"] = $this->getTypeIcon( $type );
+			$item["thumb"] = $this->displayThumb( $type );
 			$item["ext"] = strtolower($type);
 			if( !$this->config['disable_mime_detection'] )
 				$item["mime_type"] = mime_content_type( $name );
@@ -1524,6 +1525,14 @@ IFM_ASSETS
 			case "pdf": return 'ifm-icon ifm-icon-file-pdf'; break;
 			case "tgz": case "zip": case "tar": case "tgz": case "tar.gz": case "tar.xz": case "tar.bz2": case "7z": case "rar": return 'ifm-icon ifm-icon-file-archive';
 			default: return 'ifm-icon ifm-icon-doc';
+		}
+	}
+
+	private function displayThumb( $type ) {
+		$type = strtolower($type);
+		switch( $type ) {
+			case "gif": case "jpg": case "jpeg": case "png": case "svg": case "webp": return true; break;
+			default: return false;
 		}
 	}
 

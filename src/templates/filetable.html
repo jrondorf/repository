@@ -8,7 +8,12 @@
 	{{/fixtop}}
 	<td>
 		<a href="{{{link}}}" tabindex="0" id="{{guid}}" class="ifmitem" {{{popover}}} data-type="{{type}}" target="_blank">
+			{{#thumb}}
+			<img class="ifm-thumb" src="{{{link}}}">
+			{{/thumb}}
+			{{^thumb}}
 			<span class="{{icon}}"></span>
+			{{/thumb}}
 			{{linkname}}
 		</a>
 	</td>

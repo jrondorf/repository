@@ -233,7 +233,12 @@ function IFM(params) {
 			],
 			orderFixed: [0, 'desc'],
 			language: self.i18n,
-			stateSave: true
+			stateSave: true,
+			initComplete: function () {
+				// fix file table length and search input
+				$('#filetable_length').parent().removeClass('col-sm-12').addClass('col-6');
+				$('#filetable_filter').parent().removeClass('col-sm-12').addClass('col-6');
+			}
 		});
 
 

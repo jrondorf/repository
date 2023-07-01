@@ -9,7 +9,7 @@
     require_once('dist/repo.php');
     $defaultconfig = array(
       "root_dir" => realpath('.'),
-      "root_public_url" => 'http://ifm',
+      "root_public_url" => 'http://repository',
       "language" => 'de',
       
       // 	// api controls
@@ -52,7 +52,7 @@
   </head>
   <body>
     <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="src/includes/jquery.min.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="dist/repo.js"></script>
   </body>
 </html>

@@ -1,24 +1,25 @@
 //////////////////////////////////////////////////
-// Repo Version 2.3.0
+// Repo Version 2.4.0
 //////////////////////////////////////////////////
 
 /* includes/jquery.min.js */
 
 /* includes/jquery-ui.min.js */
-@@@file:src/includes/jquery-ui.min.js@@@
+@@@file:node_modules/jquery-ui/dist/jquery-ui.min.js@@@
 
 /* includes/popper.min.js */
 
 /* includes/bootstrap.min.js */
 
 /* includes/bootstrap-notify.min.js */
-@@@file:src/includes/bootstrap-notify.min.js@@@
+@@@file:node_modules/bootstrap-notify/bootstrap-notify.min.js@@@
 
 /* includes/bootstrap-treeview.min.js */
 @@@file:src/includes/bootstrap-treeview.min.js@@@
 
 /* includes/datatables.min.js */
-@@@file:src/includes/datatables.min.js@@@
+@@@file:node_modules/datatables.net/js/jquery.dataTables.min.js@@@
+@@@file:node_modules/datatables.net-bs5/js/dataTables.bootstrap5.min.js@@@
 
 /* includes/lodash.min.js */
 @@@file:src/includes/lodash.min.js@@@
@@ -30,7 +31,7 @@
 @@@file:src/includes/BootstrapMenu.min.js@@@
 
 /* includes/mustache.min.js */
-@@@file:src/includes/mustache.min.js@@@
+@@@file:node_modules/mustache/mustache.min.js@@@
 
 /* includes/ace.js */
 @@@file:src/includes/ace.js@@@
@@ -39,7 +40,7 @@
 @@@acedir:src/includes/ace@@@
 
 /* includes/baguetteBox.min.js */
-@@@file:src/includes/baguetteBox.min.js@@@
+@@@file:node_modules/baguettebox.js/dist/baguetteBox.min.js@@@
 
 /* includes/ifm.js */
 @@@file:src/ifm.js@@@

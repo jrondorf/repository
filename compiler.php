@@ -25,7 +25,7 @@ $IFM_SRC_PHP = array(
 );
 
 // get options
-$options = getopt(null, array("language::", "languages::", "lang::", "cdn"));
+$options = getopt("", array("language::", "languages::", "lang::", "cdn"));
 
 // build CDN version?
 if (isset($options['cdn']))

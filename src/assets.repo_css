@@ -1,5 +1,5 @@
 /****************************************************************************************************
- * Repo Version 2.3.0
+ * Repo Version 2.4.0
  ****************************************************************************************************/
 
 /* includes/bootstrap.min.css */
@@ -8,7 +8,7 @@
 @@@file:src/includes/bootstrap-treeview.min.css@@@
 
 /* includes/datatables.min.css */
-@@@file:src/includes/datatables.min.css@@@
+@@@file:node_modules/datatables.net-bs5/css/dataTables.bootstrap5.min.css@@@
 
 /* includes/fontello-embedded.css */
 @@@file:src/includes/fontello-embedded.css@@@
@@ -17,7 +17,7 @@
 @@@file:src/includes/animation.css@@@
 
 /* includes/baguetteBox.min.css */
-@@@file:src/includes/baguetteBox.min.css@@@
+@@@file:node_modules/baguettebox.js/dist/baguetteBox.min.css@@@
 
 /* style.css */
 @@@file:src/style.css@@@

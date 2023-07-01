@@ -278,6 +278,14 @@ max-width: 800px;
     overflow: hidden;
 }
 
-.ifm-thumb::before {
-    display: none;
+@media screen and (max-width: 767px) {
+    div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+        justify-content: flex-end !important;
+    }
+    div.dataTables_wrapper div.dataTables_length {
+        text-align: start !important;
+    }
+    div.dataTables_wrapper div.dataTables_filter {
+        text-align: right !important;
+    }
 }
