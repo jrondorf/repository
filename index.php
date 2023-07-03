@@ -43,7 +43,8 @@
       // "scale_image" => %id=image_scale% && extension_loaded('gd'),
       // "image_width" => %id=image_width%,
       // "image_height" => %id=image_height%
-      "clipboard_folder_deep_link" => 1
+      "clipboard_folder_deep_link" => 1,
+      "display_thumbs" => 1
   );
     $ifm = new IFM($defaultconfig);
     $ifm->run('inline');

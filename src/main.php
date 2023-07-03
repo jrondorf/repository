@@ -80,7 +80,8 @@ class IFM {
 		"blacklist_file_ext_array" => array(),
 		"whitelist_file_ext_array" => array(),
 		"script_path" => "",
-		"asset_path" => ""
+		"asset_path" => "",
+		"display_thumbs" => 0
 
 	);
 
@@ -513,7 +514,7 @@ IFM_ASSETS
 			else
 				$type = substr( strrchr( $name, "." ), 1 );
 			$item["icon"] = $this->getTypeIcon( $type );
-			$item["thumb"] = $this->displayThumb( $type );
+			$item["thumb"] = $this->displayThumbs( $type );
 			$item["ext"] = strtolower($type);
 			if( !$this->config['disable_mime_detection'] )
 				$item["mime_type"] = mime_content_type( $name );
@@ -1528,11 +1529,15 @@ IFM_ASSETS
 		}
 	}
 
-	private function displayThumb( $type ) {
-		$type = strtolower($type);
-		switch( $type ) {
-			case "gif": case "jpg": case "jpeg": case "png": case "svg": case "webp": return true; break;
-			default: return false;
+	private function displayThumbs( $type ) {
+		if ($this->config['display_thumbs']) {
+			$type = strtolower($type);
+			switch( $type ) {
+				case "gif": case "jpg": case "jpeg": case "png": case "svg": case "webp": return true; break;
+				default: return false;
+			}
+		} else {
+			return false;
 		}
 	}
 
