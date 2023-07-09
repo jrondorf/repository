@@ -1,7 +1,7 @@
 <?php
 
 //////////////////////////////////////////////////
-// Repo Version 2.4.0
+// Repo Version 2.4.1
 //////////////////////////////////////////////////
 
 /* =======================================================================
@@ -82,7 +82,6 @@ class IFM {
 		"script_path" => "",
 		"asset_path" => "",
 		"display_thumbs" => 0
-
 	);
 
 	private $config = array();
@@ -390,7 +389,7 @@ IFM_ASSETS
 		return $dir;
 	}
 
-	public static function init($auth, $username, $password_hash, $subdomain, $directory, $subdirectoryUser, $adminGroup, $timezone, $dateLocale, $language, $scale_image, $image_width, $image_height) {
+	public static function init($auth, $username, $password_hash, $subdomain, $directory, $subdirectoryUser, $adminGroup, $timezone, $dateLocale, $language, $scale_image, $image_width, $image_height, $display_thumbs = 0) {
 		$subdomain = self::normalizeDirectory($subdomain);
 		$directory = self::normalizeDirectory($directory);
 		if ($auth == 1) {
@@ -457,7 +456,8 @@ IFM_ASSETS
 
 			"scale_image" => $scale_image && extension_loaded('gd'),
 			"image_width" => $image_width,
-			"image_height" => $image_height
+			"image_height" => $image_height,
+			"display_thumbs" => $display_thumbs
 		);
 
 		$ifm = new IFM($defaultconfig);

@@ -238,9 +238,11 @@ function IFM(params) {
 				// fix file table length and search input
 				$('#filetable_length').parent().removeClass('col-sm-12').addClass('col-6');
 				$('#filetable_filter').parent().removeClass('col-sm-12').addClass('col-6');
+			},
+			drawCallback: function () {
+				baguetteBox.run('#filetable');
 			}
 		});
-
 
 		// add event listeners
 		filetable.tBodies[0].addEventListener( 'keypress', function( e ) {
@@ -256,12 +258,6 @@ function IFM(params) {
 					e.stopPropagation();
 					e.preventDefault();
 					self.changeDirectory( ifmitem.parentElement.parentElement.dataset.filename );
-				} else if (ifmitem.dataset.caption) {
-					e.stopPropagation();
-					e.preventDefault();
-					baguetteBox.show(0, baguetteBox.run('#'+ifmitem.id, {
-						animation: false
-					})[0]);
 				} else if (self.config.edit && (ifmitem.children[0].className.includes('ifm-icon-file-code') || ifmitem.children[0].className.includes('ifm-icon-doc-text'))) {
 					e.stopPropagation();
 					e.preventDefault();
@@ -1814,7 +1810,7 @@ function IFM(params) {
 				return;
 				break;
 			case 'h':
-			case 'ArrowLeft':
+			// case 'ArrowLeft':
 			case 'Backspace':
 				e.preventDefault();
 				self.changeDirectory( '..' );
