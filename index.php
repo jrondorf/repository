@@ -40,11 +40,17 @@
       // 	"forceproxy" => 0,
       // 	"confirmoverwrite" => 1,
       // "container" => "%id=container%",
-      // "scale_image" => %id=image_scale% && extension_loaded('gd'),
-      // "image_width" => %id=image_width%,
-      // "image_height" => %id=image_height%
+      "scale_image" => 1 && extension_loaded('gd'),
+      "image_width" => 1200,
+      "image_height" => 1200,
       "clipboard_folder_deep_link" => 1,
-      "display_thumbs" => 1
+      "display_thumbs" => 1,
+
+      "email_address" => "info@instacks.com",
+      "from_email_address" => "",
+      "send_email_same_address" => 0,
+      "send_email_upload" => 1,
+      "email_subject_upload" => "test",
   );
     $ifm = new IFM($defaultconfig);
     $ifm->run('inline');

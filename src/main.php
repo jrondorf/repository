@@ -1,7 +1,7 @@
 <?php
 
 //////////////////////////////////////////////////
-// Repo Version 2.4.1
+// Repo Version 2.5.0
 //////////////////////////////////////////////////
 
 /* =======================================================================
@@ -74,6 +74,7 @@ class IFM {
 
 		// additional settings
 		"email_address" => "",
+		"from_email_address" => "",
 		"send_email_same_address" => 0,
 		"send_email_upload" => 0,
 		"email_subject_upload" => "",
@@ -87,6 +88,7 @@ class IFM {
 	private $config = array();
 	private $templates = array();
 	private $i18n = array();
+	private $l;
 	public $mode = "standalone";
 
 	public function __construct( $config=array() ) {
@@ -570,7 +572,7 @@ IFM_ASSETS
 		$ret['inline'] = ( $this->mode == "inline" ) ? true : false;
 		$ret['isDocroot'] = ($this->getRootDir() == $this->getScriptRoot());
 
-		foreach (array("auth_source", "root_dir", "script_path", "asset_path", "email_address") as $field) {
+		foreach (array("auth_source", "root_dir", "script_path", "asset_path", "email_address", "from_email_address") as $field) {
 			unset($ret[$field]);
 		}
 		$this->jsonResponse($ret);
@@ -1197,6 +1199,26 @@ IFM_ASSETS
 					case IMAGETYPE_JPEG:
 						if (imagetypes() & IMAGETYPE_JPEG) {
 							$image = imagecreatefromjpeg($file);
+							// rotate image
+							$exif = exif_read_data($file, 'IFD0', true);
+							if (isset($exif) && $exif['IFD0'] && $exif['IFD0']['Orientation']) {
+								$orientation = $exif['IFD0']['Orientation'];
+								$degree = 0;
+								switch ($orientation) {
+									case 3:
+										$degree = 180;
+										break;
+									case 6:
+										$degree = 270;
+										break;
+									case 8:
+										$degree = 90;
+										break;
+								}
+								if ($degree) {
+									$image = imagerotate($image, $degree, 0);
+								}
+							}
 							$image = imagescale($image, $new_width);
 							if ($square) {
 								$x = imagesx($image);
@@ -1254,7 +1276,9 @@ IFM_ASSETS
  		$header = "Content-type: text/html; charset=utf-8 \r\n";
  		if ( $this->config['send_email_same_address'] == 1 ) {
  			$header .= "From: ".$this->config['email_address']." <".$this->config['email_address']."> \r\n";
- 		}
+ 		} else if (!empty($this->config['from_email_address'])) {
+			$header .= "From: ".$this->config['from_email_address']." <".$this->config['from_email_address']."> \r\n";
+		}
  		$header .= "MIME-Version: 1.0 \r\n";
  		$header .= "Content-Transfer-Encoding: 8bit \r\n";
  		$header .= "Date: ".date("r (T)")." \r\n";

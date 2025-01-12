@@ -236,8 +236,8 @@ function IFM(params) {
 			stateSave: true,
 			initComplete: function () {
 				// fix file table length and search input
-				$('#filetable_length').parent().removeClass('col-sm-12').addClass('col-6');
-				$('#filetable_filter').parent().removeClass('col-sm-12').addClass('col-6');
+				$('#filetable_length').parent().removeClass('col-sm-12').removeClass('col-md-6').addClass('col-12').addClass('col-sm-6');
+				$('#filetable_filter').parent().removeClass('col-sm-12').removeClass('col-md-6').addClass('col-12').addClass('col-sm-6');
 			},
 			drawCallback: function () {
 				baguetteBox.run('#filetable');
@@ -1581,7 +1581,7 @@ function IFM(params) {
 		document.getElementById( 'wq-' + id ).remove();
 		var wq = document.getElementById( 'waitqueue' );
 		if( wq.children.length == 0 ) {
-			document.getElementsByTagName( 'footer' )[0].remove();
+			document.querySelector( "#ifmfooter" ).remove();
 			document.body.style.paddingBottom = 0;
 		} else {
 			document.getElementsByName( 'taskCount' )[0].innerText = wq.children.length;
